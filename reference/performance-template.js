@@ -41,14 +41,50 @@
   const fmtMoney = n => Math.round(n).toLocaleString('ko-KR');
   const fmtMd    = n => (Math.round(n * 100) / 100).toString();
 
-  // ── 더미 Work Report (이 파일 단독, view-template.js 와 무관) ──
+  // ── 더미 Work Report (2025-04 ~ 2027-02, 약 23개월) ──
+  // 모달 월 컬럼이 (예: 2026-04 ~ 2026-05) 두 달뿐이라도, 범위 밖 데이터까지
+  // 의도적으로 풍부하게 넣어 "범위 밖 → 제외" 필터링 동작을 함께 시연한다.
   const workReports = [
+    // 2025-04
+    { date:'2025-04-02', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'사전 영업 PM' },
+    { date:'2025-04-09', userPosition:'과장', project:'P', kind:'프로젝트', minutes:240, memo:'요건 인터뷰' },
+    { date:'2025-04-16', userPosition:'대리', project:'P', kind:'프로젝트', minutes:360, memo:'시장 조사' },
+    { date:'2025-04-24', userPosition:'사원', project:'P', kind:'연차',     minutes:480, memo:'연차(제외)' },
+    // 2025-05
+    { date:'2025-05-07', userPosition:'이사', project:'P', kind:'프로젝트', minutes:120, memo:'경영검토' },
+    { date:'2025-05-14', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'제안 설계' },
+    { date:'2025-05-21', userPosition:'과장', project:'P', kind:'프로젝트', minutes:480, memo:'견적' },
+    { date:'2025-05-28', userPosition:'주임', project:'P', kind:'프로젝트', minutes:240, memo:'리서치' },
+    // 2025-06
+    { date:'2025-06-04', userPosition:'상무', project:'P', kind:'프로젝트', minutes:240, memo:'스폰서 회의' },
+    { date:'2025-06-11', userPosition:'부장', project:'P', kind:'프로젝트', minutes:240, memo:'PMO' },
+    { date:'2025-06-18', userPosition:'차장', project:'P', kind:'프로젝트', minutes:480, memo:'아키 검토' },
+    { date:'2025-06-25', userPosition:'대리', project:'P', kind:'기타',     minutes:240, memo:'기타(제외)' },
+    // 2025-07
+    { date:'2025-07-02', userPosition:'이사', project:'P', kind:'프로젝트', minutes:240, memo:'착수회의' },
+    { date:'2025-07-10', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'PMO' },
+    { date:'2025-07-17', userPosition:'과장', project:'P', kind:'프로젝트', minutes:480, memo:'분석' },
+    { date:'2025-07-24', userPosition:'사원', project:'P', kind:'프로젝트', minutes:360, memo:'문서화' },
+    // 2025-08
+    { date:'2025-08-06', userPosition:'전무', project:'P', kind:'프로젝트', minutes:120, memo:'스폰서 보고' },
+    { date:'2025-08-13', userPosition:'부장', project:'P', kind:'부서업무', minutes:480, memo:'부서업무(제외)' },
+    { date:'2025-08-20', userPosition:'차장', project:'P', kind:'프로젝트', minutes:480, memo:'설계' },
+    { date:'2025-08-27', userPosition:'주임', project:'P', kind:'프로젝트', minutes:480, memo:'테스트' },
+    // 2025-09
+    { date:'2025-09-03', userPosition:'부장', project:'P', kind:'프로젝트', minutes:240, memo:'PMO' },
+    { date:'2025-09-10', userPosition:'과장', project:'P', kind:'프로젝트', minutes:480, memo:'설계서' },
+    { date:'2025-09-17', userPosition:'대리', project:'P', kind:'프로젝트', minutes:360, memo:'프로토' },
+    { date:'2025-09-24', userPosition:'사원', project:'P', kind:'프로젝트', minutes:480, memo:'와이어프레임' },
+    // 2025-10
+    { date:'2025-10-08', userPosition:'이사', project:'P', kind:'프로젝트', minutes:240, memo:'경영보고' },
+    { date:'2025-10-15', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'PMO' },
+    { date:'2025-10-22', userPosition:'과장', project:'P', kind:'프로젝트', minutes:240, memo:'개발 리드' },
+    { date:'2025-10-29', userPosition:'사원', project:'P', kind:'연차',     minutes:480, memo:'연차(제외)' },
     // 2025-11
     { date:'2025-11-04', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'요건정의 워크숍' },
     { date:'2025-11-12', userPosition:'과장', project:'P', kind:'프로젝트', minutes:480, memo:'아키텍처 초안' },
     { date:'2025-11-18', userPosition:'대리', project:'P', kind:'프로젝트', minutes:240, memo:'프로토타입' },
     { date:'2025-11-26', userPosition:'사원', project:'P', kind:'프로젝트', minutes:480, memo:'화면 와이어프레임' },
-
     // 2025-12
     { date:'2025-12-03', userPosition:'이사', project:'P', kind:'프로젝트', minutes:120, memo:'착수보고 검토' },
     { date:'2025-12-10', userPosition:'부장', project:'P', kind:'프로젝트', minutes:240, memo:'PM 회의' },
@@ -61,14 +97,12 @@
     { date:'2026-01-15', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'PMO' },
     { date:'2026-01-20', userPosition:'과장', project:'P', kind:'프로젝트', minutes:480, memo:'DB 모델링' },
     { date:'2026-01-27', userPosition:'대리', project:'P', kind:'프로젝트', minutes:480, memo:'API 설계' },
-
     // 2026-02
     { date:'2026-02-05', userPosition:'이사', project:'P', kind:'프로젝트', minutes:120, memo:'경영보고' },
     { date:'2026-02-12', userPosition:'부장', project:'P', kind:'프로젝트', minutes:360, memo:'PMO' },
     { date:'2026-02-18', userPosition:'차장', project:'P', kind:'프로젝트', minutes:480, memo:'개발 리드' },
     { date:'2026-02-25', userPosition:'주임', project:'P', kind:'기타',     minutes:240, memo:'사내교육(제외)' },
     { date:'2026-02-26', userPosition:'사원', project:'P', kind:'프로젝트', minutes:480, memo:'단위 개발' },
-
     // 2026-03
     { date:'2026-03-04', userPosition:'전무', project:'P', kind:'프로젝트', minutes:120, memo:'스폰서 리뷰' },
     { date:'2026-03-10', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'리뷰 회의' },
@@ -76,7 +110,6 @@
     { date:'2026-03-22', userPosition:'대리', project:'P', kind:'프로젝트', minutes:480, memo:'개발' },
     { date:'2026-03-28', userPosition:'사원', project:'P', kind:'부서업무', minutes:480, memo:'부서업무(제외)' },
     { date:'2026-03-29', userPosition:'사원', project:'P', kind:'프로젝트', minutes:240, memo:'테스트' },
-
     // 2026-04
     { date:'2026-04-03', userPosition:'이사', project:'P', kind:'프로젝트', minutes:240, memo:'PI 리뷰' },
     { date:'2026-04-09', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'PMO' },
@@ -84,7 +117,6 @@
     { date:'2026-04-17', userPosition:'차장', project:'P', kind:'프로젝트', minutes:240, memo:'리뷰' },
     { date:'2026-04-22', userPosition:'대리', project:'P', kind:'프로젝트', minutes:360, memo:'개발' },
     { date:'2026-04-28', userPosition:'사원', project:'P', kind:'프로젝트', minutes:480, memo:'개발' },
-
     // 2026-05
     { date:'2026-05-06', userPosition:'부장', project:'P', kind:'프로젝트', minutes:240, memo:'고객 보고' },
     { date:'2026-05-11', userPosition:'과장', project:'P', kind:'프로젝트', minutes:480, memo:'통합' },
@@ -92,6 +124,54 @@
     { date:'2026-05-20', userPosition:'주임', project:'P', kind:'프로젝트', minutes:480, memo:'테스트 자동화' },
     { date:'2026-05-25', userPosition:'사원', project:'P', kind:'프로젝트', minutes:240, memo:'테스트' },
     { date:'2026-05-29', userPosition:'사원', project:'P', kind:'프로젝트', minutes:480, memo:'테스트' },
+    // 2026-06
+    { date:'2026-06-03', userPosition:'전무', project:'P', kind:'프로젝트', minutes:240, memo:'경영검토' },
+    { date:'2026-06-10', userPosition:'부장', project:'P', kind:'프로젝트', minutes:360, memo:'PMO' },
+    { date:'2026-06-17', userPosition:'과장', project:'P', kind:'프로젝트', minutes:480, memo:'배포 준비' },
+    { date:'2026-06-24', userPosition:'대리', project:'P', kind:'프로젝트', minutes:240, memo:'안정화' },
+    // 2026-07
+    { date:'2026-07-02', userPosition:'이사', project:'P', kind:'프로젝트', minutes:120, memo:'리뷰' },
+    { date:'2026-07-09', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'운영 인계' },
+    { date:'2026-07-16', userPosition:'차장', project:'P', kind:'프로젝트', minutes:240, memo:'개발' },
+    { date:'2026-07-23', userPosition:'주임', project:'P', kind:'프로젝트', minutes:360, memo:'테스트' },
+    { date:'2026-07-30', userPosition:'사원', project:'P', kind:'기타',     minutes:240, memo:'기타(제외)' },
+    // 2026-08
+    { date:'2026-08-05', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'운영 PMO' },
+    { date:'2026-08-12', userPosition:'과장', project:'P', kind:'프로젝트', minutes:240, memo:'유지보수' },
+    { date:'2026-08-19', userPosition:'대리', project:'P', kind:'프로젝트', minutes:360, memo:'버그수정' },
+    { date:'2026-08-26', userPosition:'사원', project:'P', kind:'프로젝트', minutes:480, memo:'문서' },
+    // 2026-09
+    { date:'2026-09-02', userPosition:'상무', project:'P', kind:'프로젝트', minutes:240, memo:'스폰서 회의' },
+    { date:'2026-09-09', userPosition:'부장', project:'P', kind:'프로젝트', minutes:240, memo:'PMO' },
+    { date:'2026-09-16', userPosition:'과장', project:'P', kind:'프로젝트', minutes:480, memo:'기능 추가' },
+    { date:'2026-09-23', userPosition:'주임', project:'P', kind:'프로젝트', minutes:480, memo:'리팩토링' },
+    // 2026-10
+    { date:'2026-10-07', userPosition:'이사', project:'P', kind:'프로젝트', minutes:120, memo:'경영보고' },
+    { date:'2026-10-14', userPosition:'부장', project:'P', kind:'프로젝트', minutes:360, memo:'운영' },
+    { date:'2026-10-21', userPosition:'차장', project:'P', kind:'프로젝트', minutes:480, memo:'리뷰' },
+    { date:'2026-10-28', userPosition:'사원', project:'P', kind:'프로젝트', minutes:240, memo:'테스트' },
+    // 2026-11
+    { date:'2026-11-04', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'운영 PMO' },
+    { date:'2026-11-11', userPosition:'과장', project:'P', kind:'프로젝트', minutes:480, memo:'유지보수' },
+    { date:'2026-11-18', userPosition:'대리', project:'P', kind:'연차',     minutes:480, memo:'연차(제외)' },
+    { date:'2026-11-25', userPosition:'사원', project:'P', kind:'프로젝트', minutes:360, memo:'개선' },
+    // 2026-12
+    { date:'2026-12-02', userPosition:'전무', project:'P', kind:'프로젝트', minutes:240, memo:'연말 검토' },
+    { date:'2026-12-09', userPosition:'부장', project:'P', kind:'프로젝트', minutes:240, memo:'PMO' },
+    { date:'2026-12-16', userPosition:'차장', project:'P', kind:'프로젝트', minutes:480, memo:'기술 리뷰' },
+    { date:'2026-12-23', userPosition:'주임', project:'P', kind:'프로젝트', minutes:240, memo:'문서 정리' },
+    { date:'2026-12-30', userPosition:'사원', project:'P', kind:'부서업무', minutes:480, memo:'부서업무(제외)' },
+
+    // 2027-01
+    { date:'2027-01-06', userPosition:'이사', project:'P', kind:'프로젝트', minutes:240, memo:'신년 PI' },
+    { date:'2027-01-13', userPosition:'부장', project:'P', kind:'프로젝트', minutes:480, memo:'PMO' },
+    { date:'2027-01-20', userPosition:'과장', project:'P', kind:'프로젝트', minutes:240, memo:'추가 개발' },
+    { date:'2027-01-27', userPosition:'대리', project:'P', kind:'프로젝트', minutes:360, memo:'테스트' },
+    // 2027-02
+    { date:'2027-02-03', userPosition:'상무', project:'P', kind:'프로젝트', minutes:120, memo:'경영보고' },
+    { date:'2027-02-10', userPosition:'부장', project:'P', kind:'프로젝트', minutes:240, memo:'운영' },
+    { date:'2027-02-17', userPosition:'차장', project:'P', kind:'프로젝트', minutes:480, memo:'리팩토링' },
+    { date:'2027-02-24', userPosition:'사원', project:'P', kind:'프로젝트', minutes:240, memo:'배포' },
   ];
 
   // ── 1) 모달 헤더에서 월 컬럼 목록 추출 ──

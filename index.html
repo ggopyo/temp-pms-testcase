@@ -410,6 +410,11 @@
     <div class="top-bar-left">
       <h1>QA 테스트 체크리스트</h1>
       <span class="user-badge" id="userBadge"></span>
+      <button id="shareLinkBtn" type="button" title="이 사용자명으로 바로 들어오는 링크 복사"
+        style="margin-left:8px; padding:4px 10px; border:1px solid #1976d2; background:#fff; color:#1976d2; border-radius:4px; cursor:pointer; font-size:12px;">
+        🔗 공유 링크 복사
+      </button>
+      <span id="shareLinkToast" style="margin-left:8px; color:#2e7d32; font-size:12px; display:none;">복사됨 ✓</span>
     </div>
     <div class="top-bar-right">
       <span class="progress-label" id="progressLabel">0 / 0</span>
@@ -652,13 +657,51 @@ document.getElementById('usernameInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') login();
 });
 
-// URL 어디에든 hphong 이 들어가면 자동 로그인 (path/hash/query 모두 지원)
-if (location.pathname.includes('hphong')
-    || location.hash.includes('hphong')
-    || location.search.includes('hphong')) {
-  document.getElementById('usernameInput').value = 'hphong';
+// URL 자동 로그인
+//   ?user=NAME       (쿼리)
+//   #user=NAME       (해시)
+//   #NAME            (해시 단독)
+//   .../NAME         (path 끝)  ← 정적 서버에서는 보통 무시됨
+function pickAutoUser() {
+  const q = new URLSearchParams(location.search).get('user');
+  if (q) return decodeURIComponent(q);
+  const h = location.hash.replace(/^#/, '');
+  if (h) {
+    const m = /(?:^|&)user=([^&]+)/.exec(h);
+    if (m) return decodeURIComponent(m[1]);
+    if (!/[=&]/.test(h)) return decodeURIComponent(h);
+  }
+  if (location.pathname.includes('hphong')) return 'hphong';
+  return null;
+}
+const autoUser = pickAutoUser();
+if (autoUser) {
+  document.getElementById('usernameInput').value = autoUser;
   login();
 }
+
+// ── 공유 링크 ─────────────────────────────────────────────
+function buildShareLink(user) {
+  const base = location.origin + location.pathname;
+  return base + '?user=' + encodeURIComponent(user);
+}
+document.getElementById('shareLinkBtn').addEventListener('click', async () => {
+  if (!currentUser) return;
+  const url = buildShareLink(currentUser);
+  try {
+    await navigator.clipboard.writeText(url);
+  } catch (_) {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); ta.remove();
+  }
+  const toast = document.getElementById('shareLinkToast');
+  toast.textContent = '복사됨 ✓ ' + url;
+  toast.style.display = 'inline';
+  clearTimeout(window.__shareToastTimer);
+  window.__shareToastTimer = setTimeout(() => { toast.style.display = 'none'; }, 3500);
+});
 
 // ── Admin ──────────────────────────────────────────────────
 async function renderAdmin() {
