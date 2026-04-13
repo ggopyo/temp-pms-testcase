@@ -1,0 +1,263 @@
+<div class="popup-content" style="width: 1284px;">
+      <div class="popup-header">
+        <h3 class="popup-title">PRE-SALES</h3>
+      </div>
+      <div class="popup-body">
+        <div class="input_group_wrap">
+          <div id="" style="padding: 8px 0; font-weight: bold; font-size: 14px; border-bottom: 1px solid #ccc; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+            <span>사업 과제/개요</span>
+          </div>
+
+          <div class="input_group">
+            <div class="input_label half">
+              <span class="input-text required">프로젝트ID</span>
+              <div class="input_group">
+                <div class="custom-select" data-initialized="true">
+                  <button type="button" class="select-button">
+                    <span class="placeholder">구분 선택</span>
+                    <div class="select-arrow"></div>
+                  </button>
+                  <div class="options-list" id="projectId" data-type="customSelect" data-required="true" data-label="프로젝트ID">
+                    <div class="option-item" value="">선택</div>
+                    <div class="option-item" value="B">사업프로젝트</div>
+                    <div class="option-item" value="G">정부과제</div>
+                    <div class="option-item" value="D">개발</div>
+                  </div>
+                  <input type="hidden" name="projectId" value="">
+                </div>
+                <input class="input-text" type="text" readonly="" disabled="" placeholder="프로젝트 ID는 자동채번됩니다">
+              </div>
+            </div>
+
+            <div class="input_label half">
+              <span class="input-text required">프로젝트명</span>
+              <input id="projectNm" type="text" data-type="string" data-required="true" data-label="프로젝트명">
+            </div>
+          </div>
+
+          <div class="input_group">
+            <div class="input_label half">
+              <span class="input-text required">고객사명</span>
+              <input id="clientNm" type="text" data-type="string" data-required="true" data-label="고객사명">
+            </div>
+
+            <div class="input_label half">
+              <span class="input-text required">영업담당</span>
+              <div class="input_select-wrap" id="div_sales">
+                <div class="custom-select biz-select" data-initialized="true">
+                  <button type="button" class="select-button">
+                    <span class="placeholder">선택하세요.</span>
+                    <div class="select-arrow"></div>
+                  </button>
+                  <div class="options-list" id="salesBiz" data-type="customSelect" data-required="true" data-label="영업담당 부문">
+                    <div class="option-item" value="">부문 선택</div>
+                    <div class="option-item" data-value="BIZ0001">사업부문</div>
+                    <div class="option-item" data-value="BIZ0002">연구개발부문</div>
+                    <div class="option-item" data-value="BIZ0003">경영부문</div>
+                    <div class="option-item" data-value="BIZ0004">기타</div>
+                    <div class="option-item" data-value="BIZ0005">임원</div>
+                  </div>
+                  <input type="hidden" name="salesBiz" value="">
+                </div>
+                <div class="custom-select dept-select" data-initialized="true">
+                  <button type="button" class="select-button">
+                    <span class="placeholder">선택하세요.</span>
+                    <div class="select-arrow"></div>
+                  </button>
+                  <div class="options-list" id="salesDept" data-type="customSelect" data-required="true" data-label="영업담당 부서">
+                    <div class="option-item" value="">부서 선택</div>
+                  </div>
+                  <input type="hidden" name="salesDept" value="">
+                </div>
+                <div class="custom-select member-select" data-initialized="true">
+                  <button type="button" class="select-button">
+                    <span class="placeholder">선택하세요.</span>
+                    <div class="select-arrow"></div>
+                  </button>
+                  <div class="options-list" id="salesMngId" data-type="customSelect" data-required="true" data-label="영업담당 부서 인원">
+                    <div class="option-item"></div>
+                  </div>
+                  <input type="hidden" name="member_sales" value="">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input_group">
+            <div class="input_label half">
+              <span class="input-text required">사업시작일</span>
+              <div class="date-calendar-container">
+                <div class="calendar-container-item">
+                  <input id="bizSartDt" class="calendar-input date-picker" placeholder="날짜 선택" data-type="date" data-required="true" data-label="사업시작일" readonly="">
+                </div>
+              </div>
+            </div>
+
+            <div class="input_label half">
+              <span class="input-text required">사업종료일</span>
+              <div class="date-calendar-container">
+                <div class="calendar-container-item">
+                  <input id="bizEndDt" class="calendar-input date-picker" placeholder="날짜 선택" data-type="date" data-required="true" data-label="사업종료일" readonly="">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input_group">
+            <div class="input_label half">
+              <span class="input-text required">총 사업비</span>
+              <div class="input_group">
+                <input id="totalBizVal" class="input-text number" type="text" data-key="totalBizVal" data-type="number" data-required="true" data-label="총 사업비">
+              </div>
+            </div>
+
+            <div class="input_label half">
+              <span class="input-text required">자사 발주금액</span>
+              <input id="orderVal" class="input-text number" type="text" data-key="orderVal" data-type="number" data-required="true" data-label="발주금액">
+            </div>
+          </div>
+
+          <div class="input_group">
+            <div class="input_label half">
+              <span class="input-text">제안형태</span>
+              <div class="custom-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="placeholder">상태 전체</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="proposeCd" data-type="customSelect" data-label="제안형태">
+                  <div class="option-item" value="PRP0001">제안(비공개 입찰)</div>
+                  <div class="option-item" value="PRP0002">수의계약</div>
+                </div>
+                <input type="hidden" name="proposeCd" value="">
+              </div>
+            </div>
+
+            <div class="input_label half">
+              <span class="input-text">진행상태</span>
+              <div class="custom-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="placeholder">상태 전체</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="progressCd" data-type="customSelect" data-label="진행상태">
+                  <div class="option-item" value="PRC0001">의견 검토 중</div>
+                  <div class="option-item" value="PRC0002">제안 작업 중</div>
+                  <div class="option-item" value="PRC0003">수주</div>
+                  <div class="option-item" value="PRC0004">제안 실패</div>
+                  <div class="option-item" value="PRC0005">DROP</div>
+                </div>
+                <input type="hidden" name="progressCd" value="">
+              </div>
+            </div>
+          </div>
+
+          <div class="input_group">
+            <div class="input_label half">
+              <span class="input-text required">투찰일정</span>
+              <div class="date-calendar-container">
+                <div class="calendar-container-item">
+                  <input id="bidDt" class="calendar-input date-picker" placeholder="날짜 선택" data-type="string" data-required="true" data-label="투찰일정" readonly="">
+                </div>
+              </div>
+            </div>
+
+            <div class="input_label half">
+              <span class="input-text required">제안일정</span>
+              <div class="date-calendar-container">
+                <div class="calendar-container-item">
+                  <input id="proposeDt" class="calendar-input date-picker" placeholder="날짜 선택" data-type="string" data-required="true" data-label="제안일정" readonly="">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="financial-section">
+            <div id="financialAccordionHeader" style="padding: 8px 0; font-weight: bold; font-size: 14px; border-bottom: 1px solid #ccc; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+              <span>매출/매입/기타비용 상세</span>
+              <span id="financialAccordionArrow" style="font-size: 11px;">▲</span>
+            </div>
+            <div id="financialAccordionBody">
+              <div class="financial-header">
+                <button class="btn btn-primary btn-small open-popup" type="button" data-target="popup-sales-input" onclick="openFinancePopupForCreate()">+ 매출/매입 입력</button>
+              </div>
+              <div class="input_group financial-group">
+                <div class="financial-group-main">
+                  <div class="input_label">
+                    <strong class="input-text">매출액(계)</strong>
+                    <input id="totalSalesAmt" type="text" class="input-text number financial-value--bold" value="0" readonly="">
+                  </div>
+                </div>
+                <div class="financial-group-sub">
+                  <div class="input_label"><span class="input-text">자사제품매출</span><input id="ownProductSalesAmt" type="text" class="input-text number" value="0" readonly=""></div>
+                  <div class="input_label"><span class="input-text">외부상품매출</span><input id="extProductSalesAmt" type="text" class="input-text number" value="0" readonly=""></div>
+                  <div class="input_label"><span class="input-text">용역매출</span><input id="serviceSalesAmt" type="text" class="input-text number" value="0" readonly=""></div>
+                </div>
+              </div>
+              <div class="input_group financial-group">
+                <div class="financial-group-main">
+                  <div class="input_label">
+                    <strong class="input-text">매입원가(계)</strong>
+                    <input id="totalPurchaseCost" type="text" class="input-text number financial-value--bold" value="0" readonly="">
+                  </div>
+                </div>
+                <div class="financial-group-sub">
+                  <div class="input_label"><span class="input-text">제품원가</span><input id="productCost" type="text" class="input-text number" value="0" readonly=""></div>
+                  <div class="input_label"><span class="input-text">상품매입원가</span><input id="goodsPurchaseCost" type="text" class="input-text number" value="0" readonly=""></div>
+                  <div class="input_label"><span class="input-text">외부용역매입</span><input id="extServiceCost" type="text" class="input-text number" value="0" readonly=""></div>
+                  <div class="input_label"><span class="input-text">내부용역원가</span><input id="internalServiceCost" type="text" class="input-text number" value="0" readonly=""></div>
+                  <div class="input_label"><span class="input-text">프로젝트 경비</span><input id="projectExpense" type="text" class="input-text number" value="0" readonly=""></div>
+                </div>
+              </div>
+              <div class="input_group financial-group financial-group--profit">
+                <div class="financial-group-sub">
+                  <div class="input_label"><strong class="input-text">매출총이익</strong><input id="grossProfit" type="text" class="input-text number financial-value--bold" value="0" readonly=""></div>
+                  <div class="input_label"><strong class="input-text">매출총이익율</strong><input id="grossProfitRate" type="text" class="input-text financial-value--bold" value="0%" readonly=""></div>
+                </div>
+                <div class="financial-group-sub financial-group-sub--highlight">
+                  <div class="input_label"><strong class="input-text">매출총이익<span class="financial-label--highlight">(내부인력 제외 기준)</span></strong><input id="grossProfitExcInternal" type="text" class="input-text number financial-value--bold" value="0" readonly=""></div>
+                  <div class="input_label"><strong class="input-text">매출총이익율<span class="financial-label--highlight">(내부인력 제외 기준)</span></strong><input id="grossProfitRateExcInternal" type="text" class="input-text financial-value--bold" value="0%" readonly=""></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <div id="detailAccordionHeader" style="padding: 8px 0; font-weight: bold; font-size: 14px; border-bottom: 1px solid #ccc; margin-bottom: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+              <span>사업/과제 상세</span>
+              <span id="detailAccordionArrow" style="font-size: 11px;">▲</span>
+            </div>
+            <div id="detailAccordionBody">
+              <div class="input_group"><div class="input_label"><span class="input-text">원발주처</span><input type="text" class="input-text" placeholder="예) 한국전력공사"></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">사업 내용 (RFP 요약)</span><textarea class="input-text" rows="3" style="resize: none;" placeholder="-&#10;-&#10;-"></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">RFP 요구사항 충족도 (심시스, 컨소사)</span><textarea class="input-text" rows="3" style="resize: none;" placeholder="-&#10;-&#10;-"></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">상세 일정</span><textarea class="input-text" rows="3" style="resize: none;" placeholder="-&#10;-&#10;-"></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">사업 구도</span><textarea class="input-text" rows="2" style="resize: none;" placeholder="ex) AA사 주 제안사, 자사는 OOO, BB사는 ..."></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">심시스 수행범위 및 R&amp;R</span><textarea class="input-text" rows="3" style="resize: none;" placeholder="-&#10;-&#10;-"></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">KSF(Key Success Factor)</span><textarea class="input-text" rows="2" style="resize: none;" placeholder="- 예) 평가위원 섭외&#10;-"></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">자사 강점 및 Winning Point</span><textarea class="input-text" rows="2" style="resize: none;" placeholder="- 예) 자사 OO 솔루션 활용 가능&#10;-"></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">자사 약점</span><textarea class="input-text" rows="2" style="resize: none;" placeholder="- 예) OO분야 전문가 부족&#10;-"></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">수주 가능성 및 근거</span><textarea class="input-text" rows="2" style="resize: none;" placeholder="- 수주가능성 : 00%&#10;- 사전영업 및 RFP 반영"></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">제안PM</span><input type="text" class="input-text" placeholder="예) 홍길동"></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">제안 Resource</span><input type="text" class="input-text" placeholder="예) 제안팀 내에서 가능"></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">수행PM</span><input type="text" class="input-text" placeholder="예) 홍길동"></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">수행 Resource</span><input type="text" class="input-text" placeholder="예) 인력 아웃소싱 3명 필요, 내부 인력 1명 추가 채용 필요"></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">지원/필요 사항</span><textarea class="input-text" rows="3" style="resize: none;" placeholder="-&#10;-&#10;-"></textarea></div></div>
+              <div class="input_group"><div class="input_label"><span class="input-text">기타</span><textarea class="input-text" rows="3" style="resize: none;" placeholder="-&#10;-&#10;-"></textarea></div></div>
+            </div>
+          </div>
+
+          <div class="input_group">
+            <div class="input_label">
+              <span class="input-text required">비고</span>
+              <textarea id="note"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-wrap">
+          <button class="btn btn-large close-popup" type="button">취소</button>
+          <button class="btn btn-primary btn-large" type="button" onclick="saveNewPreSales()">저장</button>
+        </div>
+      </div>
+    </div>

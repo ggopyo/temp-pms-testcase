@@ -1,0 +1,200 @@
+<div class="popup-body" id="dairyWorkLogForm">
+    <div class="input_group_wrap">
+        <div class="input_group">
+            <div class="input_label">
+                <span class="input-text required">제목</span>
+                <input type="text" id="title" data-type="string" data-required="true" data-label="제목" data-readonly-edit="true" disabled="">
+            </div>
+        </div>
+
+        <input type="hidden" id="seqDt" data-type="string" data-label="업무일지 기준 일" value="20260413">
+        <input type="hidden" id="userId" data-type="string" data-label="사원아이디" value="0026">
+
+        <div class="input_group">
+            <div class="input_label half">
+                <span class="input-text">작성일</span>
+                <input type="text" id="rgtDt" data-type="date" data-date-format="YYYY-MM-DD HH:mm" data-label="작성일" data-readonly-edit="true" disabled="">
+            </div>
+
+            <div class="input_label half">
+                <span class="input-text">수정일</span>
+                <input type="text" id="updDt" data-type="date" data-date-format="YYYY-MM-DD HH:mm" data-label="수정일" data-readonly-edit="true" disabled="">
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <p class="table-subTitle">업무내용</p>
+            <table class="table-row edit-table" id="details" data-type="array" data-label="업무내용">
+                <colgroup>
+                    <col style="width: 150px">
+                    <col style="width: 150px">
+                    <col style="width: 150px">
+                    <col style="width: 372px">
+                    <col style="width: 100px">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>구분</th>
+                        <th>프로젝트명</th>
+                        <th>소요시간(분)</th>
+                        <th>작업내용</th>
+                        <th>
+                            <button type="button" class="table-inner_btn primay btn-add">
+                                추가
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody><tr>
+        <td>
+            <div class="custom-select" data-initialized="true">
+                <button type="button" class="select-button">
+                    <span class="">부서업무</span>
+                    <div class="select-arrow"></div>
+                </button>
+                <div class="options-list">
+                    <div class="option-item" data-value="">업무구분 선택</div><div class="option-item" data-value="WRD0001" title="제안">제안</div><div class="option-item" data-value="WRD0002" title="프로젝트">프로젝트</div><div class="option-item selected" data-value="WRD0003" title="부서업무">부서업무</div><div class="option-item" data-value="WRD0004" title="연차">연차</div><div class="option-item" data-value="WRD0099" title="기타">기타</div>
+                </div>
+                <input type="hidden" name="dtlCd" value="WRD0003" data-key="dtlCd" data-type="string" data-required="true" data-label="업무구분">
+            </div>
+        </td>
+        <td>
+            <div class="custom-select project-select" style="opacity: 0.5; pointer-events: none;" data-initialized="true">
+                <button type="button" class="select-button" disabled="">
+                    <span class="">프로젝트 선택</span>
+                    <div class="select-arrow"></div>
+                </button>
+                <div class="options-list">
+                    <div class="option-item selected" data-value="">프로젝트 선택</div><div class="option-item" data-value="39" title="(24F044-B1) 스마트캠프 구축 사업">(24F044-B1) 스마트캠프 구축 사업</div><div class="option-item" data-value="30" title="26년 ARGOS CAD 유지보수">26년 ARGOS CAD 유지보수</div><div class="option-item" data-value="33" title="26년 지형분석 SW(SKY-300-TEP) 유지보수 용역">26년 지형분석 SW(SKY-300-TEP) 유지보수 용역</div><div class="option-item" data-value="32" title="26년 해파임무지역 지리공간분석SW(Terra) 유지보수">26년 해파임무지역 지리공간분석SW(Terra) 유지보수</div><div class="option-item" data-value="50" title="Bynd Lite 상품 개발">Bynd Lite 상품 개발</div><div class="option-item" data-value="24" title="가나 지속가능개발대학교 학사관리 시스템 및 홈페이지 구축(개발)">가나 지속가능개발대학교 학사관리 시스템 및 홈페이지 구축(개발)</div><div class="option-item" data-value="49" title="강원후평산단 바이오산업공정 현황분석컨설팅">강원후평산단 바이오산업공정 현황분석컨설팅</div><div class="option-item" data-value="37" title="바인드 플랫폼 서비스 운영 용역">바인드 플랫폼 서비스 운영 용역</div><div class="option-item" data-value="38" title="인천국제공항 통합 시설관리시스템 구축사업">인천국제공항 통합 시설관리시스템 구축사업</div><div class="option-item" data-value="47" title="정부세종청사 통합관리시스템 유지관리용역 사업(24,25년)">정부세종청사 통합관리시스템 유지관리용역 사업(24,25년)</div><div class="option-item" data-value="48" title="크래프톤 보안(PoC) · 운영컨설팅 계약">크래프톤 보안(PoC) · 운영컨설팅 계약</div><div class="option-item" data-value="35" title="필리핀 경찰청 범죄수사정보 통합관리 시스템 구축 사업 ISMP 수립 및 시스템개발(PC) 용역립 및 시스템개발(PC) 용역">필리핀 경찰청 범죄수사정보 통합관리 시스템 구축 사업 ISMP 수립 및 시스템개발(PC) 용역립 및 시스템개발(PC) 용역</div>
+                </div>
+                <input type="hidden" name="prjSeq" value="" data-key="prjSeq" data-type="string" data-label="프로젝트명" data-required="false">
+            </div>
+        </td>
+        <td>
+            <div class="custom-select" data-initialized="true">
+                <button type="button" class="select-button">
+                    <span class="">120</span>
+                    <div class="select-arrow"></div>
+                </button>
+                <div class="options-list">
+                    <div class="option-item" data-value="">소요시간 선택</div><div class="option-item" data-value="WRT0001" title="30">30</div><div class="option-item" data-value="WRT0002" title="60">60</div><div class="option-item" data-value="WRT0003" title="90">90</div><div class="option-item selected" data-value="WRT0004" title="120">120</div><div class="option-item" data-value="WRT0005" title="150">150</div><div class="option-item" data-value="WRT0006" title="180">180</div><div class="option-item" data-value="WRT0007" title="210">210</div><div class="option-item" data-value="WRT0008" title="240">240</div><div class="option-item" data-value="WRT0009" title="270">270</div><div class="option-item" data-value="WRT0010" title="300">300</div><div class="option-item" data-value="WRT0011" title="330">330</div><div class="option-item" data-value="WRT0012" title="360">360</div><div class="option-item" data-value="WRT0013" title="390">390</div><div class="option-item" data-value="WRT0014" title="420">420</div><div class="option-item" data-value="WRT0015" title="480">480</div>
+                </div>
+                <input type="hidden" name="timeCd" value="WRT0004" data-key="timeCd" data-type="string" data-required="true" data-label="소요시간">
+            </div>
+        </td>
+        <td>
+            <input type="text" data-key="workDetails" data-type="string" data-required="true" data-label="작업내용">
+        </td>
+        <td>
+            <button type="button" class="table-inner_btn btn-delete">삭제</button>
+        </td>
+    </tr><tr>
+        <td>
+            <div class="custom-select" data-initialized="true">
+                <button type="button" class="select-button">
+                    <span class="">부서업무</span>
+                    <div class="select-arrow"></div>
+                </button>
+                <div class="options-list">
+                    <div class="option-item" data-value="">업무구분 선택</div><div class="option-item" data-value="WRD0001" title="제안">제안</div><div class="option-item" data-value="WRD0002" title="프로젝트">프로젝트</div><div class="option-item selected" data-value="WRD0003" title="부서업무">부서업무</div><div class="option-item" data-value="WRD0004" title="연차">연차</div><div class="option-item" data-value="WRD0099" title="기타">기타</div>
+                </div>
+                <input type="hidden" name="dtlCd" value="WRD0003" data-key="dtlCd" data-type="string" data-required="true" data-label="업무구분">
+            </div>
+        </td>
+        <td>
+            <div class="custom-select project-select" style="opacity: 0.5; pointer-events: none;" data-initialized="true">
+                <button type="button" class="select-button" disabled="">
+                    <span class="">프로젝트 선택</span>
+                    <div class="select-arrow"></div>
+                </button>
+                <div class="options-list">
+                    <div class="option-item selected" data-value="">프로젝트 선택</div><div class="option-item" data-value="39" title="(24F044-B1) 스마트캠프 구축 사업">(24F044-B1) 스마트캠프 구축 사업</div><div class="option-item" data-value="30" title="26년 ARGOS CAD 유지보수">26년 ARGOS CAD 유지보수</div><div class="option-item" data-value="33" title="26년 지형분석 SW(SKY-300-TEP) 유지보수 용역">26년 지형분석 SW(SKY-300-TEP) 유지보수 용역</div><div class="option-item" data-value="32" title="26년 해파임무지역 지리공간분석SW(Terra) 유지보수">26년 해파임무지역 지리공간분석SW(Terra) 유지보수</div><div class="option-item" data-value="50" title="Bynd Lite 상품 개발">Bynd Lite 상품 개발</div><div class="option-item" data-value="24" title="가나 지속가능개발대학교 학사관리 시스템 및 홈페이지 구축(개발)">가나 지속가능개발대학교 학사관리 시스템 및 홈페이지 구축(개발)</div><div class="option-item" data-value="49" title="강원후평산단 바이오산업공정 현황분석컨설팅">강원후평산단 바이오산업공정 현황분석컨설팅</div><div class="option-item" data-value="37" title="바인드 플랫폼 서비스 운영 용역">바인드 플랫폼 서비스 운영 용역</div><div class="option-item" data-value="38" title="인천국제공항 통합 시설관리시스템 구축사업">인천국제공항 통합 시설관리시스템 구축사업</div><div class="option-item" data-value="47" title="정부세종청사 통합관리시스템 유지관리용역 사업(24,25년)">정부세종청사 통합관리시스템 유지관리용역 사업(24,25년)</div><div class="option-item" data-value="48" title="크래프톤 보안(PoC) · 운영컨설팅 계약">크래프톤 보안(PoC) · 운영컨설팅 계약</div><div class="option-item" data-value="35" title="필리핀 경찰청 범죄수사정보 통합관리 시스템 구축 사업 ISMP 수립 및 시스템개발(PC) 용역립 및 시스템개발(PC) 용역">필리핀 경찰청 범죄수사정보 통합관리 시스템 구축 사업 ISMP 수립 및 시스템개발(PC) 용역립 및 시스템개발(PC) 용역</div>
+                </div>
+                <input type="hidden" name="prjSeq" value="" data-key="prjSeq" data-type="string" data-label="프로젝트명" data-required="false">
+            </div>
+        </td>
+        <td>
+            <div class="custom-select" data-initialized="true">
+                <button type="button" class="select-button">
+                    <span class="">240</span>
+                    <div class="select-arrow"></div>
+                </button>
+                <div class="options-list">
+                    <div class="option-item" data-value="">소요시간 선택</div><div class="option-item" data-value="WRT0001" title="30">30</div><div class="option-item" data-value="WRT0002" title="60">60</div><div class="option-item" data-value="WRT0003" title="90">90</div><div class="option-item" data-value="WRT0004" title="120">120</div><div class="option-item" data-value="WRT0005" title="150">150</div><div class="option-item" data-value="WRT0006" title="180">180</div><div class="option-item" data-value="WRT0007" title="210">210</div><div class="option-item selected" data-value="WRT0008" title="240">240</div><div class="option-item" data-value="WRT0009" title="270">270</div><div class="option-item" data-value="WRT0010" title="300">300</div><div class="option-item" data-value="WRT0011" title="330">330</div><div class="option-item" data-value="WRT0012" title="360">360</div><div class="option-item" data-value="WRT0013" title="390">390</div><div class="option-item" data-value="WRT0014" title="420">420</div><div class="option-item" data-value="WRT0015" title="480">480</div>
+                </div>
+                <input type="hidden" name="timeCd" value="WRT0008" data-key="timeCd" data-type="string" data-required="true" data-label="소요시간">
+            </div>
+        </td>
+        <td>
+            <input type="text" data-key="workDetails" data-type="string" data-required="true" data-label="작업내용">
+        </td>
+        <td>
+            <button type="button" class="table-inner_btn btn-delete">삭제</button>
+        </td>
+    </tr><tr>
+        <td>
+            <div class="custom-select" data-initialized="true">
+                <button type="button" class="select-button">
+                    <span class="">부서업무</span>
+                    <div class="select-arrow"></div>
+                </button>
+                <div class="options-list">
+                    <div class="option-item" data-value="">업무구분 선택</div><div class="option-item" data-value="WRD0001" title="제안">제안</div><div class="option-item" data-value="WRD0002" title="프로젝트">프로젝트</div><div class="option-item selected" data-value="WRD0003" title="부서업무">부서업무</div><div class="option-item" data-value="WRD0004" title="연차">연차</div><div class="option-item" data-value="WRD0099" title="기타">기타</div>
+                </div>
+                <input type="hidden" name="dtlCd" value="WRD0003" data-key="dtlCd" data-type="string" data-required="true" data-label="업무구분">
+            </div>
+        </td>
+        <td>
+            <div class="custom-select project-select" style="opacity: 0.5; pointer-events: none;" data-initialized="true">
+                <button type="button" class="select-button" disabled="">
+                    <span class="">프로젝트 선택</span>
+                    <div class="select-arrow"></div>
+                </button>
+                <div class="options-list">
+                    <div class="option-item selected" data-value="">프로젝트 선택</div><div class="option-item" data-value="39" title="(24F044-B1) 스마트캠프 구축 사업">(24F044-B1) 스마트캠프 구축 사업</div><div class="option-item" data-value="30" title="26년 ARGOS CAD 유지보수">26년 ARGOS CAD 유지보수</div><div class="option-item" data-value="33" title="26년 지형분석 SW(SKY-300-TEP) 유지보수 용역">26년 지형분석 SW(SKY-300-TEP) 유지보수 용역</div><div class="option-item" data-value="32" title="26년 해파임무지역 지리공간분석SW(Terra) 유지보수">26년 해파임무지역 지리공간분석SW(Terra) 유지보수</div><div class="option-item" data-value="50" title="Bynd Lite 상품 개발">Bynd Lite 상품 개발</div><div class="option-item" data-value="24" title="가나 지속가능개발대학교 학사관리 시스템 및 홈페이지 구축(개발)">가나 지속가능개발대학교 학사관리 시스템 및 홈페이지 구축(개발)</div><div class="option-item" data-value="49" title="강원후평산단 바이오산업공정 현황분석컨설팅">강원후평산단 바이오산업공정 현황분석컨설팅</div><div class="option-item" data-value="37" title="바인드 플랫폼 서비스 운영 용역">바인드 플랫폼 서비스 운영 용역</div><div class="option-item" data-value="38" title="인천국제공항 통합 시설관리시스템 구축사업">인천국제공항 통합 시설관리시스템 구축사업</div><div class="option-item" data-value="47" title="정부세종청사 통합관리시스템 유지관리용역 사업(24,25년)">정부세종청사 통합관리시스템 유지관리용역 사업(24,25년)</div><div class="option-item" data-value="48" title="크래프톤 보안(PoC) · 운영컨설팅 계약">크래프톤 보안(PoC) · 운영컨설팅 계약</div><div class="option-item" data-value="35" title="필리핀 경찰청 범죄수사정보 통합관리 시스템 구축 사업 ISMP 수립 및 시스템개발(PC) 용역립 및 시스템개발(PC) 용역">필리핀 경찰청 범죄수사정보 통합관리 시스템 구축 사업 ISMP 수립 및 시스템개발(PC) 용역립 및 시스템개발(PC) 용역</div>
+                </div>
+                <input type="hidden" name="prjSeq" value="" data-key="prjSeq" data-type="string" data-label="프로젝트명" data-required="false">
+            </div>
+        </td>
+        <td>
+            <div class="custom-select" data-initialized="true">
+                <button type="button" class="select-button">
+                    <span class="">120</span>
+                    <div class="select-arrow"></div>
+                </button>
+                <div class="options-list">
+                    <div class="option-item" data-value="">소요시간 선택</div><div class="option-item" data-value="WRT0001" title="30">30</div><div class="option-item" data-value="WRT0002" title="60">60</div><div class="option-item" data-value="WRT0003" title="90">90</div><div class="option-item selected" data-value="WRT0004" title="120">120</div><div class="option-item" data-value="WRT0005" title="150">150</div><div class="option-item" data-value="WRT0006" title="180">180</div><div class="option-item" data-value="WRT0007" title="210">210</div><div class="option-item" data-value="WRT0008" title="240">240</div><div class="option-item" data-value="WRT0009" title="270">270</div><div class="option-item" data-value="WRT0010" title="300">300</div><div class="option-item" data-value="WRT0011" title="330">330</div><div class="option-item" data-value="WRT0012" title="360">360</div><div class="option-item" data-value="WRT0013" title="390">390</div><div class="option-item" data-value="WRT0014" title="420">420</div><div class="option-item" data-value="WRT0015" title="480">480</div>
+                </div>
+                <input type="hidden" name="timeCd" value="WRT0004" data-key="timeCd" data-type="string" data-required="true" data-label="소요시간">
+            </div>
+        </td>
+        <td>
+            <input type="text" data-key="workDetails" data-type="string" data-required="true" data-label="작업내용">
+        </td>
+        <td>
+            <button type="button" class="table-inner_btn btn-delete">삭제</button>
+        </td>
+    </tr></tbody>
+            </table>
+        </div>
+
+        <div class="input_group">
+            <div class="input_label">
+                <span class="input-text">요청사항</span>
+                <textarea id="workRequest" data-type="string" data-label="요청사항"></textarea>
+            </div>
+        </div>
+
+        <div class="input_group">
+            <div class="input_label">
+                <span class="input-text">특이사항</span>
+                <textarea id="specialRemark" data-type="string" data-label="특이사항"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-wrap">
+        <button class="btn btn-large close-popup" type="button">취소</button>
+        <button class="btn btn-primary btn-large" type="button" onclick="commonUtil.actSave('#popup-layout1', {api:dailryworkLogApi, seq: modifySeq, mode: targetMode})">저장</button>
+    </div>
+</div>

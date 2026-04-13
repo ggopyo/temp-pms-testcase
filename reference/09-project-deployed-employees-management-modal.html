@@ -1,0 +1,98 @@
+<div class="popup-content">
+    <div class="popup-header">
+      <h3 class="popup-title">PROJECT</h3>
+    </div>
+    <div class="popup-body">
+      <div class="component-wrap">
+        <div class="component-left"></div>
+        <div class="component-right">
+          <button class="btn btn-primary btn-large row-addBtn" type="button">행추가</button>
+        </div>
+      </div>
+      <table class="table-row edit-table hrm-table">
+        <colgroup>
+          <col style="width: 170px">
+          <col style="width: 170px">
+          <col style="width: 170px">
+          <col style="width: 200px">
+          <col style="width: 200px">
+          <col style="width: 200px">
+          <col style="width: 240px">
+          <col style="width: 80px">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>부분</th>
+            <th>부서</th>
+            <th>성명</th>
+            <th>투입일자</th>
+            <th>철수일자</th>
+            <th>M/D</th>
+            <th>투입비율(1~100)</th>
+            <th>삭제</th>
+          </tr>
+        </thead>
+        <tbody><tr>
+              <td>
+                <div class="custom-select" data-initialized="true">
+                  <button type="button" class="select-button">
+                    <span class="">사업부문</span>
+                    <div class="select-arrow"></div>
+                  </button>
+                  <div class="options-list biz-select" data-type="customSelect" data-required="true" data-label="영업담당 부문"><div class="option-item" value="">부문 선택</div><div class="option-item selected" data-value="BIZ0001">사업부문</div><div class="option-item" data-value="BIZ0002">연구개발부문</div><div class="option-item" data-value="BIZ0003">경영부문</div><div class="option-item" data-value="BIZ0004">기타</div><div class="option-item" data-value="BIZ0005">임원</div></div>
+                  <input type="hidden" name="salesBiz" value="BIZ0001">
+                </div>
+              </td>
+              <td>
+                <div class="custom-select" data-initialized="true">
+                  <button type="button" class="select-button">
+                    <span class="">AX사업부</span>
+                    <div class="select-arrow"></div>
+                  </button>
+                  <div class="options-list dept-select" data-type="customSelect" data-required="true" data-label="영업담당 부서"><div class="option-item" value="">부서 선택</div><div class="option-item selected" data-value="DEP0001">AX사업부</div><div class="option-item" data-value="DEP0002">ICT사업부</div><div class="option-item" data-value="DEP0003">전략사업부</div><div class="option-item" data-value="DEP0013">컨설팅사업부</div><div class="option-item" data-value="DEP0016">3D솔루션사업부</div></div>
+                  <input type="hidden" name="salesDept" value="DEP0001">
+                </div>
+              </td>
+              <td>
+                <div class="custom-select" data-initialized="true">
+                  <button type="button" class="select-button">
+                    <span class="">박수철</span>
+                    <div class="select-arrow"></div>
+                  </button>
+                  <div class="options-list member-select" data-type="customSelect" data-required="true" data-label="영업담당 부서 인원"><div class="option-item" value="">선택하세요</div><div class="option-item selected" value="0004">박수철</div></div>
+                  <input type="hidden" name="member_sales" value="">
+                </div>
+              </td>
+            <td>
+              <div class="inputDt-container">
+                <div class="inputContainer-item">
+                  <input class="calendar-input date-picker inputDt flatpickr-input" placeholder="날짜 선택" readonly="readonly" type="text">
+                  <div class="calendar-popup"></div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="outputDt-container">
+                <div class="outputDt-container-item">
+                  <input class="calendar-input date-picker outputDt flatpickr-input" placeholder="날짜 선택" readonly="readonly" type="text">
+                  <div class="calendar-popup"></div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <input class="md" type="text" readonly="" disabled="">
+            </td>
+            <td>
+              <input class="memo number-decimal" type="text">
+            </td>
+            <td>
+              <button class="btn table-inner_btn delete-row" type="button">삭제</button>
+            </td>
+        </tr></tbody>
+      </table>
+      <div class="btn-wrap">
+        <button class="btn btn-large close-popup" type="button">취소</button>
+        <button class="btn btn-primary btn-large" type="button" onclick="actSaveManPower()">저장</button>
+      </div>
+    </div>
+  </div>

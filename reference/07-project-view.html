@@ -1,0 +1,162 @@
+<section class="sub-container">
+    <div class="sub-container-inner">
+      <h2 class="sub-container-title sub-container-title-between">
+        기본정보
+
+        <div class="btn-wrap">
+          <button class="btn btn-small btn-outline btn-icon-print" type="button">
+            인쇄</button>
+        </div>
+      </h2>
+
+      <table class="table-col detail-table">
+        <colgroup>
+          <col style="width: 200px">
+          <col>
+          <col style="width: 200px">
+          <col>
+          <col style="width: 200px">
+          <col>
+        </colgroup>
+        <tbody>
+          <tr>
+            <th class="text-wrap alignLeft" scope="row">프로젝트ID</th>
+            <td>G260401</td>
+            <th class="text-wrap alignLeft" scope="row">고객사명</th>
+            <td>고도화_고객사</td>
+            <th class="text-wrap alignLeft" scope="row">계약기간</th>
+            <td>2026.04.10 ~ 2026.05.29</td>
+          </tr>
+          <tr>
+            <th class="text-wrap alignLeft" scope="row">프로젝트명</th>
+            <td colspan="5">고도화_테스트</td>
+          </tr>
+          <tr>
+            <th class="text-wrap alignLeft" scope="row">총 사업비</th>
+            <td class="text-wrap alignRight verticalMiddle">500,000,000</td>
+            <th class="text-wrap alignLeft" scope="row">자사 발주금액</th>
+            <td class="text-wrap alignRight verticalMiddle">250,000,000</td>
+            <th></th>
+            <td></td>
+          </tr>
+          <tr>
+            <th class="text-wrap alignLeft" scope="row">매출액</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicTotalSalesAmt">255,000,000</span></td>
+            <th class="text-wrap alignLeft" scope="row">매입액</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicTotalPurchaseCost">111,000,000</span></td>
+            <th class="text-wrap alignLeft" scope="row">매출총이익</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicGrossProfit">144,000,000</span></td>
+          </tr>
+          <tr>
+            <th class="text-wrap alignLeft" scope="row">　자사제품매출</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicOwnProductSalesAmt">250,000,000</span></td>
+            <th class="text-wrap alignLeft" scope="row">　제품원가</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicProductCost">100,000,000</span></td>
+            <th class="text-wrap alignLeft" scope="row">　매출총이익율</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicGrossProfitRate">56.47%</span></td>
+          </tr>
+          <tr>
+            <th class="text-wrap alignLeft" scope="row">　외부상품매출</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicExtProductSalesAmt">0</span></td>
+            <th class="text-wrap alignLeft" scope="row">　상품매입원가</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicGoodsPurchaseCost">1,000,000</span></td>
+            <th class="text-wrap alignLeft" scope="row">　매출이익<br>　(내부인력 제외 기준)</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicGrossProfitExcInternal">154,000,000</span></td>
+          </tr>
+          <tr>
+            <th class="text-wrap alignLeft" scope="row">　용역매출</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicServiceSalesAmt">5,000,000</span></td>
+            <th class="text-wrap alignLeft" scope="row">　외부용역매입</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicExtServiceCost">0</span></td>
+            <th class="text-wrap alignLeft" scope="row">　매출총이익율<br>　(내부인력 제외 기준)</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicGrossProfitRateExcInternal">60.39%</span></td>
+          </tr>
+          <tr>
+            <th class="text-wrap alignLeft" scope="row"></th>
+            <td class="alignRight"></td>
+            <th class="text-wrap alignLeft" scope="row">　내부용역원가</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicInternalServiceCost">10,000,000</span></td>
+            <th class="text-wrap alignLeft" scope="row"></th>
+            <td class="alignRight"></td>
+          </tr>
+          <tr>
+            <th class="text-wrap alignLeft" scope="row"></th>
+            <td class="alignRight"></td>
+            <th class="text-wrap alignLeft" scope="row">　프로젝트 경비</th>
+            <td class="text-wrap alignRight verticalMiddle"><span id="basicProjectExpense">0</span></td>
+            <th class="text-wrap alignLeft" scope="row"></th>
+            <td></td>
+          </tr>
+          <!-- <tr>
+            <th scope="row">시작일</th>
+            <td
+              th:text="${Page.bizSartDt != null ? #strings.replace(#strings.arraySplit(Page.bizSartDt, ' ')[0], '-', '.') + '.' : '-'}">
+              2024.07.14.</td>
+            <th scope="row">종료일</th>
+            <td
+              th:text="${Page.bizEndDt != null ? #strings.replace(#strings.arraySplit(Page.bizEndDt, ' ')[0], '-', '.') + '.' : '-'}">
+              2025.12.31.</td>
+          </tr>
+          <tr>
+            <th scope="row">발주가격</th>
+            <td th:text="${#numbers.formatInteger(Page.orderVal ?: 0, 0, 'COMMA')}">111,111,000,000</td>
+            <th scope="row">수주금액 (비율)</th>
+            <td
+              th:text="${#numbers.formatInteger(Page.ordersVal ?: 0, 0, 'COMMA')} + ' (' + (${Page.ordersRate ?: 0}) + '%)'">
+              100,000,000 (10%)</td>
+          </tr>
+          <tr>
+            <th scope="row">참여형태</th>
+            <td th:text="${Page.involvedCdNm ?: '-'}">컨소시엄 주관사</td>
+            <th scope="row">프로젝트 지분 비율(%)</th>
+            <td th:text="${Page.stakeRate ?: 0}">50</td>
+          </tr>
+          <tr>
+            <th scope="row">실 수주금액</th>
+            <td th:text="${#numbers.formatInteger(Page.realOrdersVal ?: 0, 0, 'COMMA')}">91,111,000,000</td>
+            <th scope="row">예상 수익금액(비율)</th>
+            <td
+              th:text="${#numbers.formatInteger(Page.expectVal ?: 0, 0, 'COMMA')} + ' (' + (${Page.expectRate ?: 0}) + '%)'">
+              91,111,000,000 (30%) </td>
+          </tr> -->
+        </tbody>
+      </table>
+
+      <table class="table-col detail-table">
+        <colgroup>
+          <col style="width: 200px">
+          <col>
+          <col style="width: 200px">
+          <col>
+          <col style="width: 200px">
+          <col>
+        </colgroup>
+        <tbody>
+          <tr>
+            <th scope="row">참여형태</th>
+            <td>단독수행</td>
+            <th scope="row">진행상태</th>
+            <td>진행전</td>
+            <th scope="row">영업관리</th>
+            <td>박수철 이사</td>
+
+          </tr>
+          <tr>
+            <th scope="row">사업관리</th>
+            <td>박수철 이사</td>
+            <th scope="row">수행</th>
+            <td>박수철 이사</td>
+            <th scope="row">재무관리</th>
+            <td>박수철 이사</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="btn-wrap">
+        <button class="btn btn-outline btn-large" type="button" onclick="location.href='/pms/pj/project'">목록</button>
+        <button class="btn btn-primary btn-large open-popup" type="button" data-target="popup-layout1" data-target-mode="create" data-setfn="true">수정</button>
+        <button class="btn btn-primary btn-large open-popup" type="button" data-target="popup-hrm" data-target-mode="create" data-setfn="true">투입인력관리</button>
+      </div>
+    </div>
+    
+  </section>

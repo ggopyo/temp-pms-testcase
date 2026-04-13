@@ -1,0 +1,247 @@
+<div class="sub-container-wrap">
+    <section class="sub-container">
+      <div class="component-wrap">
+        <div class="component-left">
+          <div class="calendar-container">
+            <div class="calendar-container-item">
+              <input class="calendar-input" id="year-start-date-10" placeholder="날짜 선택" readonly="">
+              <div id="start-calendar" class="calendar"></div>
+            </div>
+            <div class="calendar-container-item">
+              <input class="calendar-input" id="year-end-date-10" placeholder="날짜 선택" readonly="">
+              <div id="end-calendar" class="calendar"></div>
+            </div>
+          </div>
+          <div class="custom-select" data-initialized="true">
+            <button type="button" class="select-button">
+              <span class="placeholder">상태 전체</span>
+              <div class="select-arrow"></div>
+            </button>
+            <div class="options-list" id="searchProgressCd">
+              <div class="option-item" value="">상태 전체</div>
+              <div class="option-item" value="PRC0001">의견 검토 중</div>
+              <div class="option-item" value="PRC0002">제안 작업 중</div>
+              <div class="option-item" value="PRC0003">수주</div>
+              <div class="option-item" value="PRC0004">제안 실패</div>
+              <div class="option-item" value="PRC0005">DROP</div>
+            </div>
+            <input type="hidden" name="searchProgressCd" value="">
+          </div>
+          <div class="custom-select" style="width: 150px;" data-initialized="true">
+            <button type="button" class="select-button">
+              <span class="placeholder">전체</span>
+              <div class="select-arrow"></div>
+            </button>
+            <div class="options-list" id="searchType">
+              <div class="option-item" value="">전체</div>
+              <div class="option-item" value="projectId">프로젝트ID</div>
+              <div class="option-item" value="projectNm">프로젝트명</div>
+              <div class="option-item" value="clientNm">고객사명</div>
+            </div>
+            <input type="hidden" name="searchType" value="">
+          </div>
+          <input id="searchText" type="text" placeholder="검색어를 입력해 주세요.">
+          <button id="btnSearch" class="btn btn-primary btn-large btn-icon-search" type="button">조회</button>
+        </div>
+        <div class="component-right">
+          <button class="btn btn-large btn-icon-excel" type="button">엑셀다운로드</button>
+          <button class="btn btn-primary btn-large open-popup" data-target="popup-layout1" type="button">신규등록</button>
+        </div>
+      </div>
+
+      <dl class="info-metrics">
+        <div div="" class="info-metrics-item"><dt>PRE-SALES</dt><dd>2</dd></div>
+              <div class="info-metrics-item"><dt>제안 작업 중</dt><dd>2</dd></div>
+              <div class="info-metrics-item"><dt>수주</dt><dd>12</dd></div>
+              <div class="info-metrics-item"><dt>제안 실패</dt><dd>2</dd></div>
+              <div class="info-metrics-item"><dt>DROP</dt><dd>0</dd></div>
+              <div class="info-metrics-item"><dt>전체</dt><dd>18</dd></div>
+          </dl>
+
+      <table class="table-row ellipsis">
+        <colgroup>
+          <col style="width: 80px">
+          <col style="width: 120px">
+          <col style="width: 240px">
+          <col style="width: 120px">
+          <col style="width: 120px">
+          <col style="width: 120px">
+          <!-- <col style="width: 170px" /> 자사 목표가 (비율) -->
+          <col style="width: 120px">
+          <col style="width: 110px">
+          <col style="width: 80px">
+          <col style="width: 120px">
+          <col style="width: 120px">
+          <col style="width: 120px">
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">프로젝트ID</th>
+            <th scope="col">프로젝트명</th>
+            <th scope="col">고객사명</th>
+            <th scope="col">총사업비</th>
+            <th scope="col">매출액</th>
+            <th scope="col">매입액</th>
+            <th scope="col">매출총이익</th>
+            <th scope="col">제안형태</th>
+            <th scope="col">투찰일정</th>
+            <th scope="col">제안일정</th>
+            <th scope="col">상태</th>
+          </tr>
+        </thead>
+        <tbody>
+					<tr onclick="detailContents.goDetailPage(42)" style="cursor:pointer;">
+						<td>18</td>
+						<td>G260401</td>
+						<td>고도화_테스트</td>
+						<td>고도화_고객사</td>
+						<td class="text-wrap alignRight">500,000,000</td>
+						<td class="text-wrap alignRight">250,000,000</td>
+						<td class="text-wrap alignRight">110,000,000</td>
+						<td class="text-wrap alignRight">140,000,000</td>
+						<td>제안(비공개 입찰)</td>
+						<td>2026.04.13.</td>
+						<td>2026.04.13.</td>
+						<td>수주</td>
+					</tr>
+					<tr onclick="detailContents.goDetailPage(40)" style="cursor:pointer;">
+						<td>17</td>
+						<td>D260401</td>
+						<td>개발_테스트</td>
+						<td>테스트</td>
+						<td class="text-wrap alignRight">10,000,000</td>
+						<td class="text-wrap alignRight">10,000,000</td>
+						<td class="text-wrap alignRight">10,000,000</td>
+						<td class="text-wrap alignRight">0</td>
+						<td>수의계약</td>
+						<td>2026.04.01.</td>
+						<td>2026.04.01.</td>
+						<td>수주</td>
+					</tr>
+					<tr onclick="detailContents.goDetailPage(41)" style="cursor:pointer;">
+						<td>16</td>
+						<td>B260401</td>
+						<td>432423432</td>
+						<td>432423432</td>
+						<td class="text-wrap alignRight">423,432</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td>수의계약</td>
+						<td>2026.04.01.</td>
+						<td>2026.03.29.</td>
+						<td>의견 검토 중</td>
+					</tr>
+					<tr onclick="detailContents.goDetailPage(36)" style="cursor:pointer;">
+						<td>15</td>
+						<td>G260302</td>
+						<td>4324234</td>
+						<td>432432fdsfsdf432432fdsfsdf4</td>
+						<td class="text-wrap alignRight">3,434</td>
+						<td class="text-wrap alignRight">20,000,000</td>
+						<td class="text-wrap alignRight">15,000,000</td>
+						<td class="text-wrap alignRight">5,000,000</td>
+						<td>수의계약</td>
+						<td>2026.03.05.</td>
+						<td>2026.03.03.</td>
+						<td>제안 실패</td>
+					</tr>
+					<tr onclick="detailContents.goDetailPage(37)" style="cursor:pointer;">
+						<td>14</td>
+						<td>D260301</td>
+						<td>432423</td>
+						<td>432432</td>
+						<td class="text-wrap alignRight">-</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td>수의계약</td>
+						<td>2026.03.04.</td>
+						<td>2026.03.25.</td>
+						<td>수주</td>
+					</tr>
+					<tr onclick="detailContents.goDetailPage(35)" style="cursor:pointer;">
+						<td>13</td>
+						<td>G260301</td>
+						<td>ㄹㅇㄴㄹㅇㄴ</td>
+						<td>ㄹㅇㄴㄹㄴㅇ</td>
+						<td class="text-wrap alignRight">-</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td>수의계약</td>
+						<td>2026.03.03.</td>
+						<td>2026.03.04.</td>
+						<td>제안 실패</td>
+					</tr>
+					<tr onclick="detailContents.goDetailPage(38)" style="cursor:pointer;">
+						<td>12</td>
+						<td>D260302</td>
+						<td>432423</td>
+						<td>432432</td>
+						<td class="text-wrap alignRight">-</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td>수의계약</td>
+						<td>2026.03.03.</td>
+						<td>2026.03.25.</td>
+						<td>제안 작업 중</td>
+					</tr>
+					<tr onclick="detailContents.goDetailPage(32)" style="cursor:pointer;">
+						<td>11</td>
+						<td>B260301</td>
+						<td>테스트_3월_23일</td>
+						<td>고객사명</td>
+						<td class="text-wrap alignRight">-</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td>수의계약</td>
+						<td>2026.03.02.</td>
+						<td>2026.03.31.</td>
+						<td>수주</td>
+					</tr>
+					<tr onclick="detailContents.goDetailPage(33)" style="cursor:pointer;">
+						<td>10</td>
+						<td>B260302</td>
+						<td>26월3월23일_2</td>
+						<td>고객사명2_수정</td>
+						<td class="text-wrap alignRight">-</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td>수의계약</td>
+						<td>2026.03.02.</td>
+						<td>2026.03.31.</td>
+						<td>수주</td>
+					</tr>
+					<tr onclick="detailContents.goDetailPage(34)" style="cursor:pointer;">
+						<td>9</td>
+						<td>B260303</td>
+						<td>테스트</td>
+						<td>ㄴㄴㄴ</td>
+						<td class="text-wrap alignRight">-</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td class="text-wrap alignRight">0</td>
+						<td>수의계약</td>
+						<td>2026.03.02.</td>
+						<td>2026.03.04.</td>
+						<td>수주</td>
+					</tr></tbody>
+      </table>
+      <div class="pagination-wrap">
+        <div class="pagination-btn-wrap">
+          <button class="pagination-btn pagination-btn-first" type="button" disabled=""></button>
+          <button class="pagination-btn pagination-btn-prev" type="button" disabled=""></button>
+        </div>
+        <div class="pagination-link-wrap"><a href="#" class="pagination-link active" data-page="1">1</a><a href="#" class="pagination-link " data-page="2">2</a></div>
+        <div class="pagination-btn-wrap">
+          <button class="pagination-btn pagination-btn-next" type="button"></button>
+          <button class="pagination-btn pagination-btn-last" type="button"></button>
+        </div>
+      </div>
+    </section>
+  </div>

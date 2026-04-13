@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA 테스트 체크리스트</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: #f5f0e8;
+    color: #2c2c2c;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  a { color: inherit; }
+
+  /* ── LOGIN ── */
+  #loginScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-box {
+    background: #fff;
+    border: 1px solid #d4cfc5;
+    padding: 48px 56px;
+    width: 360px;
+  }
+  .login-box h1 {
+    font-size: 18px;
+    font-weight: normal;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .login-box p {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 32px;
+  }
+  .login-box input[type="text"] {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    background: transparent;
+    padding: 8px 0;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 24px;
+  }
+  .login-box input[type="text"]:focus {
+    border-bottom-color: #2c2c2c;
+  }
+  .btn-primary {
+    width: 100%;
+    background: #2c2c2c;
+    color: #f5f0e8;
+    border: none;
+    padding: 10px 0;
+    font-size: 13px;
+    font-family: inherit;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+  }
+  .btn-primary:hover { background: #444; }
+
+  /* ── LAYOUT ── */
+  #appScreen { display: none; }
+
+  .top-bar {
+    background: #fff;
+    border-bottom: 1px solid #d4cfc5;
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-bar-left { display: flex; align-items: center; gap: 20px; }
+  .top-bar h1 { font-size: 15px; font-weight: normal; letter-spacing: 0.04em; }
+  .user-badge {
+    font-size: 12px;
+    color: #888;
+    border: 1px solid #ddd;
+    padding: 3px 10px;
+  }
+  .top-bar-right { display: flex; align-items: center; gap: 12px; }
+  .progress-label { font-size: 12px; color: #888; }
+  .progress-bar-wrap { width: 120px; height: 4px; background: #e8e4dc; }
+  .progress-bar-fill { height: 100%; background: #2c2c2c; transition: width 0.3s; }
+
+  .main-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  /* ── ADMIN VIEW ── */
+  .admin-header {
+    margin-bottom: 24px;
+  }
+  .admin-header h2 {
+    font-size: 16px;
+    font-weight: normal;
+    margin-bottom: 4px;
+  }
+  .admin-header p { font-size: 12px; color: #888; }
+
+  .admin-summary {
+    margin-bottom: 12px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .admin-summary-item { font-size: 12px; color: #888; }
+  .admin-summary-item strong { color: #2c2c2c; }
+
+  .admin-table-wrap {
+    overflow-x: auto;
+    border: 1px solid #d4cfc5;
+    margin-bottom: 40px;
+  }
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .admin-table th {
+    background: #f5f0e8;
+    border-bottom: 1px solid #d4cfc5;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: normal;
+    color: #666;
+    position: sticky;
+    top: 0;
+  }
+  .admin-table th.user-col {
+    text-align: center;
+    min-width: 80px;
+  }
+  .admin-table td {
+    border-bottom: 1px solid #ece8e0;
+    padding: 7px 12px;
+    vertical-align: middle;
+  }
+  .admin-table td.user-cell { text-align: center; }
+  .admin-table tr:last-child td { border-bottom: none; }
+  .admin-table tr:hover td { background: #faf8f4; }
+  .admin-table .section-row td {
+    background: #f5f0e8;
+    font-size: 11px;
+    color: #888;
+    padding: 5px 12px;
+    border-bottom: 1px solid #d4cfc5;
+  }
+  .admin-table .tc-id { color: #888; font-size: 11px; }
+  .cell-pass { color: #2a7a2a; font-weight: bold; font-size: 11px; }
+  .cell-fail { color: #c0392b; font-weight: bold; font-size: 11px; }
+  .cell-none { color: #bbb; font-size: 11px; }
+  .cell-comment-btn {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 10px;
+    color: #888;
+    background: #f0ece4;
+    border: 1px solid #d4cfc5;
+    padding: 1px 6px;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  .cell-comment-btn:hover { background: #e8e4dc; }
+
+  /* 코멘트 모달 */
+  .comment-modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .comment-modal-overlay.show { display: flex; }
+  .comment-modal {
+    background: #fff;
+    border: 1px solid #d4cfc5;
+    padding: 28px 32px;
+    width: 420px;
+    max-width: 90vw;
+  }
+  .comment-modal-title {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #2c2c2c;
+  }
+  .comment-modal-row { margin-bottom: 12px; }
+  .comment-modal-label { font-size: 11px; color: #888; margin-bottom: 4px; }
+  .comment-modal-text { font-size: 13px; color: #2c2c2c; line-height: 1.6; white-space: pre-wrap; }
+  .comment-modal-close {
+    margin-top: 20px;
+    width: 100%;
+    background: #2c2c2c;
+    color: #f5f0e8;
+    border: none;
+    padding: 9px 0;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .comment-modal-close:hover { background: #444; }
+
+  .admin-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .btn-back {
+    background: none;
+    border: 1px solid #ccc;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .btn-back:hover { background: #f0ece4; }
+
+  /* ── SECTION ── */
+  .section-block {
+    margin-bottom: 48px;
+  }
+  .section-title {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: #888;
+    text-transform: uppercase;
+    border-bottom: 1px solid #d4cfc5;
+    padding-bottom: 8px;
+    margin-bottom: 0;
+  }
+
+  /* ── TEST ITEM ── */
+  .test-item {
+    border-bottom: 1px solid #e8e4dc;
+    padding: 14px 0;
+  }
+  .test-item:last-child { border-bottom: none; }
+
+  .test-item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .test-item-num {
+    font-size: 11px;
+    color: #aaa;
+    min-width: 36px;
+    padding-top: 1px;
+    flex-shrink: 0;
+  }
+  .test-item-desc {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .test-item-desc .step-num {
+    display: inline-block;
+    font-size: 11px;
+    color: #aaa;
+    margin-right: 4px;
+  }
+  .check-group {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    align-items: flex-start;
+    padding-top: 2px;
+  }
+  .check-btn {
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 3px 12px;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .check-btn.pass-btn:hover, .check-btn.pass-btn.active {
+    background: #2c2c2c;
+    color: #f5f0e8;
+    border-color: #2c2c2c;
+  }
+  .check-btn.fail-btn:hover, .check-btn.fail-btn.active {
+    background: #c0392b;
+    color: #fff;
+    border-color: #c0392b;
+  }
+
+  .fail-reason {
+    margin-top: 8px;
+    margin-left: 52px;
+    display: none;
+  }
+  .fail-reason input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #e0a090;
+    background: #fff9f8;
+    padding: 6px 0;
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+  }
+  .fail-reason input:focus { border-bottom-color: #c0392b; }
+  .fail-reason input::placeholder { color: #ccc; }
+
+  /* ── REMARK ── */
+  .remark-row {
+    margin-top: 10px;
+    margin-left: 52px;
+  }
+  .remark-row textarea {
+    width: 100%;
+    border: 1px solid #e8e4dc;
+    background: #faf8f4;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 52px;
+    outline: none;
+    color: #2c2c2c;
+  }
+  .remark-row textarea:focus { border-color: #bbb; }
+  .remark-row textarea::placeholder { color: #ccc; }
+
+  /* ── STATUS BADGES ── */
+  .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border: 1px solid;
+  }
+  .badge-pass { color: #2c7a3a; border-color: #2c7a3a; background: #f0faf2; }
+  .badge-fail { color: #c0392b; border-color: #c0392b; background: #fff5f4; }
+  .badge-pending { color: #999; border-color: #ddd; background: #fafafa; }
+
+  /* ── SAVE BAR ── */
+  .save-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid #d4cfc5;
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .save-bar-info { font-size: 12px; color: #888; }
+
+  .toast {
+    position: fixed;
+    bottom: 60px;
+    right: 32px;
+    background: #2c2c2c;
+    color: #f5f0e8;
+    padding: 10px 20px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+
+  /* read-only mode for admin */
+  .readonly-mode .check-btn { pointer-events: none; opacity: 0.7; }
+  .readonly-mode .fail-reason input { pointer-events: none; }
+  .readonly-mode .remark-row textarea { pointer-events: none; }
+  .readonly-mode .save-bar { display: none; }
+
+  .loading { text-align: center; padding: 60px; color: #999; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>QA 테스트 체크리스트</h1>
+    <p>사용자명을 입력하고 시작하세요</p>
+    <input type="text" id="usernameInput" placeholder="사용자명" autofocus>
+    <button class="btn-primary" onclick="login()">시작하기</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen">
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <h1>QA 테스트 체크리스트</h1>
+      <span class="user-badge" id="userBadge"></span>
+    </div>
+    <div class="top-bar-right">
+      <span class="progress-label" id="progressLabel">0 / 0</span>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content" id="mainContent">
+    <div class="loading">불러오는 중...</div>
+  </div>
+
+  <div class="save-bar" id="saveBar" style="display:none">
+    <span class="save-bar-info" id="saveInfo">마지막 저장: -</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- 코멘트 모달 -->
+<div class="comment-modal-overlay" id="commentModalOverlay" onclick="closeCommentModal(event)">
+  <div class="comment-modal">
+    <div class="comment-modal-title" id="commentModalTitle"></div>
+    <div id="commentModalBody"></div>
+    <button class="comment-modal-close" onclick="closeCommentModal()">닫기</button>
+  </div>
+</div>
+
+<script>
+// ── Firebase ──────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyBHsshgNYAaqXL3PVcJinpvTZ-l992oBhk",
+  authDomain: "decent-habitat-446203-f9.firebaseapp.com",
+  projectId: "decent-habitat-446203-f9",
+  storageBucket: "decent-habitat-446203-f9.firebasestorage.app",
+  messagingSenderId: "787410968842",
+  appId: "1:787410968842:web:efd14f88e74f08dd839af3",
+  measurementId: "G-82N49ZE5Q7"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const checklistCol = db.collection('qa_checklists');
+
+// ── State ──────────────────────────────────────────────────
+let currentUser = '';
+let isAdmin = false;
+let results = {};   // { itemId: { status:'pass'|'fail'|null, reason:'', remark:'' } }
+let lastSaved = null;
+
+// ── Test Data ─────────────────────────────────────────────
+const SECTIONS = [
+  {
+    id: 'ps-list', title: 'Pre-Sales > List',
+    items: [
+      { id: 'ps-list-01', tc: 'TC-PS-L-01', steps: ['시작연도 2026, 종료연도 2026 선택 후 조회 버튼 클릭', '목록에 해당 연도 외 데이터가 없는지 확인'] },
+      { id: 'ps-list-02', tc: 'TC-PS-L-02', steps: ['상태 드롭다운에서 수주 선택 후 조회 클릭', '목록의 모든 행 상태 컬럼이 수주인지 확인'] },
+      { id: 'ps-list-03', tc: 'TC-PS-L-03', steps: ['검색 타입 프로젝트ID 선택 + 특정 프로젝트ID 입력 후 조회 클릭', '목록에 해당 프로젝트ID 행만 나오는지 확인'] },
+      { id: 'ps-list-04', tc: 'TC-PS-L-04', steps: ['검색 타입 프로젝트명 선택 + 검색어 고도화 입력 후 조회 클릭', '고도화가 포함된 프로젝트명 행만 나오는지 확인'] },
+      { id: 'ps-list-05', tc: 'TC-PS-L-05', steps: ['검색 타입 고객사명 선택 + 검색어 존재하지않는고객사 입력 후 조회', '목록이 비어있는지 확인'] },
+      { id: 'ps-list-06', tc: 'TC-PS-L-06', steps: ['조회 후 목록에 수주 상태 행 수를 확인', '상단 수주 카운트와 일치하는지 확인', '상단 전체 카운트와 목록 전체 행 수가 일치하는지 확인'] },
+      { id: 'ps-list-07', tc: 'TC-PS-L-07', steps: ['1페이지에서 첫 번째 버튼, 이전 버튼이 disabled인지 확인', '2페이지 클릭 후 목록이 2페이지 데이터로 바뀌는지 확인', '마지막 페이지에서 다음/마지막 버튼이 disabled인지 확인'] },
+      { id: 'ps-list-09', tc: 'TC-PS-L-09', steps: ['신규등록 버튼 클릭', '신규등록 모달이 열리는지 확인'] },
+    ]
+  },
+  {
+    id: 'ps-new', title: 'Pre-Sales > New (신규등록 모달)',
+    items: [
+      { id: 'ps-new-01', tc: 'TC-PS-N-01', steps: ['신규등록 버튼 클릭 → 모달이 빈 상태로 열리는지 확인', '프로젝트ID 구분 드롭다운이 활성화 상태인지 확인'] },
+      { id: 'ps-new-02', tc: 'TC-PS-N-02', steps: ['프로젝트ID 구분 드롭다운에서 G(정부과제) 선택', '정부과제가 선택된 상태로 표시되는지 확인'] },
+      { id: 'ps-new-03', tc: 'TC-PS-N-03', steps: ['프로젝트명 비운 채로 저장 클릭', '저장 안 되고 프로젝트명 오류 메시지가 표시되는지 확인'] },
+      { id: 'ps-new-04', tc: 'TC-PS-N-04', steps: ['고객사명 비운 채로 저장 클릭', '저장 안 되는지 확인'] },
+      { id: 'ps-new-05', tc: 'TC-PS-N-05', steps: ['총사업비·발주금액 비운 채로 저장 클릭', '저장 안 되는지 확인'] },
+      { id: 'ps-new-07', tc: 'TC-PS-N-07', steps: ['영업담당 부문 선택 → 부서 드롭다운에 해당 부서 목록이 나오는지 확인', '부서 선택 → 인원 드롭다운이 연동되는지 확인'] },
+      { id: 'ps-new-08', tc: 'TC-PS-N-08', steps: ['매출/매입/기타비용 상세 헤더 클릭 → 하단 내용이 접히는지 확인', '다시 클릭 시 다시 펼쳐지는지 확인'] },
+      { id: 'ps-new-09', tc: 'TC-PS-N-09', steps: ['+ 매출/매입 입력 버튼 클릭', 'Sales/Cost Plan 모달이 열리는지 확인'] },
+      { id: 'ps-new-10', tc: 'TC-PS-N-10', steps: ['모든 필수값 입력 후 저장 클릭', '모달이 닫히는지 확인', 'Pre-Sales List에 새 항목이 추가되는지 확인'] },
+    ]
+  },
+  {
+    id: 'ps-view', title: 'Pre-Sales > View',
+    items: [
+      { id: 'ps-view-00', tc: 'TC-PS-V-00', steps: ['Pre-Sales New에서 신규 등록한 항목을 목록에서 클릭하여 View 진입', '등록 시 입력한 프로젝트명·고객사명·사업기간·총사업비·발주금액이 View에 동일하게 표시되는지 확인', '등록 시 선택한 진행상태·제안형태가 View에 동일하게 표시되는지 확인'] },
+      { id: 'ps-view-01', tc: 'TC-PS-V-01', steps: ['프로젝트ID 셀에 등록한 값이 올바르게 표시되는지 확인', '고객사명 셀에 등록한 값이 올바르게 표시되는지 확인', '사업기간 셀에 등록한 날짜 범위가 올바르게 표시되는지 확인'] },
+      { id: 'ps-view-02', tc: 'TC-PS-V-02', steps: ['매출액이 입력한 값과 일치하는지 확인', '매입액이 입력한 값과 일치하는지 확인', '매출총이익이 매출액 - 매입액과 일치하는지 확인', '매출총이익율이 올바르게 계산되어 표시되는지 확인'] },
+      { id: 'ps-view-03', tc: 'TC-PS-V-03', steps: ['내부인력 제외 기준 매출총이익이 올바르게 계산되는지 확인', '내부인력 제외 기준 이익율이 올바르게 계산되는지 확인'] },
+      { id: 'ps-view-04', tc: 'TC-PS-V-04', steps: ['목록 버튼 클릭', 'Pre-Sales 목록 화면으로 이동하는지 확인'] },
+      { id: 'ps-view-05', tc: 'TC-PS-V-05', steps: ['수정 버튼 클릭', 'Pre-Sales Edit 모달이 열리는지 확인'] },
+      { id: 'ps-view-06', tc: 'TC-PS-V-06', steps: ['PDF 다운로드 버튼 클릭', 'PDF 파일 다운로드가 시작되는지 확인'] },
+    ]
+  },
+  {
+    id: 'ps-edit', title: 'Pre-Sales > Edit (모달)',
+    items: [
+      { id: 'ps-edit-02', tc: 'TC-PS-E-02', steps: ['수정 모달 열기', '프로젝트ID가 기존 등록된 값으로 올바르게 표시되는지 확인', '프로젝트명에 기존 등록된 값이 채워져 있는지 확인', '프로젝트ID 구분 선택이 수정 불가 상태인지 확인'] },
+      { id: 'ps-edit-03', tc: 'TC-PS-E-03', steps: ['프로젝트명 비우고 저장 버튼 클릭', '저장 안 되고 프로젝트명 오류 메시지 표시되는지 확인'] },
+      { id: 'ps-edit-04', tc: 'TC-PS-E-04', steps: ['고객사명 비우고 저장 버튼 클릭', '저장 안 되는지 확인'] },
+      { id: 'ps-edit-05', tc: 'TC-PS-E-05', steps: ['총사업비·발주금액 비우고 저장 클릭', '저장 안 되는지 확인'] },
+      { id: 'ps-edit-07', tc: 'TC-PS-E-07', steps: ['부문 드롭다운에서 사업부문 선택', '부서 드롭다운에 AX사업부, ICT사업부 등 해당 부서 목록이 나오는지 확인', '부서 선택 시 인원 목록이 연동되는지 확인'] },
+      { id: 'ps-edit-08', tc: 'TC-PS-E-08', steps: ['진행상태를 수주로 변경', '발주금액과 매출액이 다른 상태에서 저장 클릭', '경고 메시지 또는 저장 불가 처리가 되는지 확인'] },
+      { id: 'ps-edit-09', tc: 'TC-PS-E-09', steps: ['매출/매입/기타비용 상세 헤더 클릭', '하단 내용이 접히는지 확인', '다시 클릭 시 다시 펼쳐지는지 확인'] },
+      { id: 'ps-edit-10', tc: 'TC-PS-E-10', steps: ['+ 매출/매입 입력 버튼 클릭', 'Sales/Cost Plan 모달이 열리는지 확인', '모달 저장 후 매출액(계)이 매출 합계와 일치하는지 확인', '매출총이익이 매출계 - 매입계와 일치하는지 확인'] },
+      { id: 'ps-edit-11', tc: 'TC-PS-E-11', steps: ['모든 필수값 입력 후 저장 버튼 클릭', '모달이 닫히는지 확인', 'View 페이지에 변경된 내용이 반영되는지 확인'] },
+    ]
+  },
+  {
+    id: 'ps-modal', title: 'Pre-Sales > Sales/Cost Plan Input Modal',
+    items: [
+      { id: 'ps-modal-01', tc: 'TC-PS-M-01', steps: ['행 추가 버튼 클릭', '매출/매입 입력 목록에 새 행 1개가 추가되는지 확인'] },
+      { id: 'ps-modal-02', tc: 'TC-PS-M-02', steps: ['삭제 버튼 클릭', '해당 행이 목록에서 제거되는지 확인'] },
+      { id: 'ps-modal-03', tc: 'TC-PS-M-03', steps: ['구분 매출 선택 → 세부구분에 자사제품/외부상품/용역 옵션이 나오는지 확인', '구분 매입 선택 → 세부구분에 제품원가/상품매입/외주인력/내부인력/프로젝트경비 옵션이 나오는지 확인'] },
+      { id: 'ps-modal-04', tc: 'TC-PS-M-04', steps: ['세부구분 내부인력 선택', '거래처가 자사로 고정되고 수정 불가 상태인지 확인', '품명/규격 셀이 등급 선택(특급/고급/중급/초급)으로 바뀌는지 확인'] },
+      { id: 'ps-modal-05', tc: 'TC-PS-M-05', steps: ['등급에서 초급 선택 → 단가 5,000,000으로 자동 설정되고 수정 불가인지 확인', '등급에서 고급 선택 → 단가 9,000,000으로 자동 설정되는지 확인'] },
+      { id: 'ps-modal-06', tc: 'TC-PS-M-06', steps: ['수량 2, 단가 5,000,000 입력 → 총액이 10,000,000인지 확인', '수량을 3으로 변경 → 총액이 15,000,000으로 즉시 갱신되는지 확인'] },
+      { id: 'ps-modal-07', tc: 'TC-PS-M-07', steps: ['여러 매출 행 입력 → 매출 합계가 입력 금액들의 합산과 일치하는지 확인', '여러 매입 행 입력 → 매입 합계가 올바르게 계산되는지 확인', '전체 합계(매출계 - 매입계)가 올바르게 계산되는지 확인'] },
+      { id: 'ps-modal-08', tc: 'TC-PS-M-08', steps: ['저장 버튼 클릭 → 모달이 닫히는지 확인', 'Edit 모달의 매출액(계)이 갱신되는지 확인'] },
+      { id: 'ps-modal-09', tc: 'TC-PS-M-09', steps: ['취소 버튼 클릭', '확인 다이얼로그가 뜨고, 확인 시 모달이 닫히는지 확인'] },
+    ]
+  },
+  {
+    id: 'pj-list', title: 'Project > List',
+    items: [
+      { id: 'pj-list-01', tc: 'TC-PJ-L-01', steps: ['상태 진행중 선택 후 조회', '목록의 모든 행 상태 컬럼이 진행중인지 확인'] },
+      { id: 'pj-list-02', tc: 'TC-PJ-L-02', steps: ['검색 타입 프로젝트ID + 특정 프로젝트ID 입력 후 조회', '목록에 해당 프로젝트ID 행만 나오는지 확인'] },
+      { id: 'pj-list-03', tc: 'TC-PJ-L-03', steps: ['상단 진행중 카운트와 목록에서 진행중 행 수가 일치하는지 확인'] },
+      { id: 'pj-list-04', tc: 'TC-PJ-L-04', steps: ['Pre-Sales에서 특정 건 진행상태를 수주로 저장', 'Project List에 해당 프로젝트가 나타나는지 확인'] },
+      { id: 'pj-list-05', tc: 'TC-PJ-L-05', steps: ['목록의 특정 행 클릭', 'Project View 페이지로 이동하고 해당 프로젝트 정보가 표시되는지 확인'] },
+    ]
+  },
+  {
+    id: 'pj-view', title: 'Project > View',
+    items: [
+      { id: 'pj-view-01', tc: 'TC-PJ-V-01', steps: ['프로젝트ID 셀에 등록한 값이 올바르게 표시되는지 확인', '계약기간 셀에 등록한 날짜 범위가 올바르게 표시되는지 확인', '참여형태 셀에 등록한 값이 표시되는지 확인', '진행상태 셀에 올바른 상태가 표시되는지 확인'] },
+      { id: 'pj-view-02', tc: 'TC-PJ-V-02', steps: ['매출액이 등록한 값과 일치하는지 확인', '매출총이익율이 올바르게 계산되어 표시되는지 확인'] },
+      { id: 'pj-view-03', tc: 'TC-PJ-V-03', steps: ['목록 버튼 클릭 → Project 목록 화면으로 이동하는지 확인'] },
+      { id: 'pj-view-04', tc: 'TC-PJ-V-04', steps: ['수정 버튼 클릭 → Project Edit 모달이 열리는지 확인'] },
+      { id: 'pj-view-05', tc: 'TC-PJ-V-05', steps: ['투입인력관리 버튼 클릭 → 투입인력관리 모달이 열리는지 확인'] },
+    ]
+  },
+  {
+    id: 'pj-edit', title: 'Project > Edit (모달)',
+    items: [
+      { id: 'pj-edit-01', tc: 'TC-PJ-E-01', steps: ['모달 열렸을 때 프로젝트ID가 올바르게 표시되고 수정 불가인지 확인', '프로젝트명이 기존 등록된 값으로 표시되고 수정 불가인지 확인', '고객사명이 기존 등록된 값으로 표시되고 수정 불가인지 확인'] },
+      { id: 'pj-edit-02', tc: 'TC-PJ-E-02', steps: ['참여형태 선택 안 한 채로 저장 클릭 → 저장 안 되는지 확인', '영업담당 인원 선택 안 한 채로 저장 클릭 → 저장 안 되는지 확인'] },
+      { id: 'pj-edit-03', tc: 'TC-PJ-E-03', steps: ['영업담당 부문 연구개발부문 선택 → 부서 드롭다운이 연구개발부문 소속 부서로 바뀌는지 확인', '부서 선택 → 인원 드롭다운이 해당 부서 인원으로 바뀌는지 확인', '사업관리/수행담당/재무담당도 동일하게 동작하는지 확인'] },
+      { id: 'pj-edit-04', tc: 'TC-PJ-E-04', steps: ['+ 매출/매입 수정 버튼 클릭 → 모달이 열리는지 확인', '모달 저장 후 매출액(계) 값이 모달 매출 합계와 일치하는지 확인'] },
+      { id: 'pj-edit-05', tc: 'TC-PJ-E-05', steps: ['저장 버튼 클릭 → 모달 닫히고 View 페이지에 변경 내용이 반영되는지 확인'] },
+    ]
+  },
+  {
+    id: 'pj-hrm', title: 'Project > 투입인력관리 모달',
+    items: [
+      { id: 'pj-hrm-01', tc: 'TC-PJ-H-01', steps: ['행추가 버튼 클릭 → 투입인력 목록에 새 행 1개가 추가되는지 확인'] },
+      { id: 'pj-hrm-02', tc: 'TC-PJ-H-02', steps: ['부문 사업부문 선택 → 부서 드롭다운이 사업부문 소속 부서로 바뀌는지 확인', '부서 선택 → 인원 드롭다운이 해당 부서 인원으로 바뀌는지 확인'] },
+      { id: 'pj-hrm-03', tc: 'TC-PJ-H-03', steps: ['투입일자와 철수일자 입력', '공수(M/D)가 자동 계산된 값으로 채워지고 수정 불가인지 확인'] },
+      { id: 'pj-hrm-04', tc: 'TC-PJ-H-04', steps: ['철수일자를 투입일자보다 앞선 날짜로 입력', '오류 처리되는지 확인'] },
+      { id: 'pj-hrm-05', tc: 'TC-PJ-H-05', steps: ['투입비율 0 입력 → 저장 불가인지 확인', '투입비율 101 입력 → 저장 불가인지 확인', '투입비율 50 입력 → 정상 저장되는지 확인'] },
+      { id: 'pj-hrm-06', tc: 'TC-PJ-H-06', steps: ['삭제 버튼 클릭 → 해당 행이 제거되는지 확인'] },
+      { id: 'pj-hrm-07', tc: 'TC-PJ-H-07', steps: ['저장 버튼 클릭 → 모달 닫히고 Project View에 투입 인력이 반영되는지 확인'] },
+    ]
+  },
+  {
+    id: 'pj-finance', title: 'Project > Sales/Cost Plan Update Modal',
+    items: [
+      { id: 'pj-finance-01', tc: 'TC-PJ-F-01', steps: ['행 추가/삭제 정상 동작 확인 (4번 모달과 동일)', '구분별 세부구분 연동, 금액 자동계산 정상 동작 확인'] },
+      { id: 'pj-finance-02', tc: 'TC-PJ-F-02', steps: ['매출 행의 월별 금액 입력', '총액이 입력한 금액의 합산과 일치하는지 확인'] },
+      { id: 'pj-finance-03', tc: 'TC-PJ-F-03', steps: ['footer의 04월 매출 계가 모든 매출 행 04월 값 합산과 일치하는지 확인'] },
+      { id: 'pj-finance-04', tc: 'TC-PJ-F-04', steps: ['저장 후 Project View의 매출액이 갱신된 매출 합계와 일치하는지 확인'] },
+    ]
+  },
+  {
+    id: 'pm-list', title: 'Project Management > Revenue > List',
+    items: [
+      { id: 'pm-list-01', tc: 'TC-PM-L-01', steps: ['연도 2026 선택 후 조회 → 목록에 2026년 해당 프로젝트만 나오는지 확인'] },
+      { id: 'pm-list-02', tc: 'TC-PM-L-02', steps: ['특정 프로젝트 행의 (계획)매출액 컬럼이 올바르게 표시되는지 확인', '해당 행의 (실적)매출액 컬럼이 올바르게 표시되는지 확인', '해당 행의 진행률 컬럼이 올바르게 표시되는지 확인'] },
+      { id: 'pm-list-03', tc: 'TC-PM-L-03', steps: ['행 클릭 → Project Management View 페이지로 이동하는지 확인'] },
+    ]
+  },
+  {
+    id: 'pm-view', title: 'Project Management > View',
+    items: [
+      { id: 'pm-view-01', tc: 'TC-PM-V-01', steps: ['프로젝트ID가 올바르게 표시되는지 확인', '총 사업비가 올바르게 표시되는지 확인'] },
+      { id: 'pm-view-02', tc: 'TC-PM-V-02', steps: ['시작 연월과 종료 연월 설정 후 계획/실적 수치가 표시되는지 확인', '종료 연월을 시작 연월과 동일하게 변경 → 수치가 해당 월 단독 기준으로 재계산되는지 확인'] },
+      { id: 'pm-view-03', tc: 'TC-PM-V-03', steps: ['계획 섹션 매출액(계) / 매입원가(계) / 매출총이익 / 이익율이 올바르게 표시되는지 확인'] },
+      { id: 'pm-view-04', tc: 'TC-PM-V-04', steps: ['실적 섹션 매출액(계) / 매출총이익 / 이익율이 올바르게 표시되는지 확인'] },
+      { id: 'pm-view-05', tc: 'TC-PM-V-05', steps: ['차이 섹션: 매출액 차이(실적 - 계획)가 올바르게 계산되는지 확인', '매입원가 차이가 올바르게 계산되는지 확인', '매출총이익 차이가 올바르게 계산되는지 확인'] },
+      { id: 'pm-view-06', tc: 'TC-PM-V-06', steps: ['공수 비교표 각 등급 행의 VRB예상 / 투입인력관리 / Work Report 수치가 올바르게 표시되는지 확인'] },
+      { id: 'pm-view-07', tc: 'TC-PM-V-07', steps: ['재무 입력 버튼 클릭 → Sales/Cost Performance Update Modal이 열리는지 확인'] },
+    ]
+  },
+  {
+    id: 'pm-modal', title: 'Project Management > Sales/Cost Performance Update Modal',
+    items: [
+      { id: 'pm-modal-01', tc: 'TC-PM-M-01', steps: ['계획 행의 모든 입력 필드가 수정 불가 상태인지 확인', '계획 행의 월별 금액 필드도 수정 불가인지 확인'] },
+      { id: 'pm-modal-02', tc: 'TC-PM-M-02', steps: ['실적 기본 행의 월별 입력 필드가 입력 가능한지 확인', '월별 금액 입력 → 총액이 합산된 값으로 자동 갱신되는지 확인'] },
+      { id: 'pm-modal-03', tc: 'TC-PM-M-03', steps: ['추가 버튼 클릭 → extra 행이 생성되는지 확인', 'extra 행에서 거래처 드롭다운이 활성화되는지 확인', 'extra 행 삭제 버튼 클릭 → 행이 제거되는지 확인'] },
+      { id: 'pm-modal-04', tc: 'TC-PM-M-04', steps: ['모달 하단 매출 합계가 모든 실적 매출 행 총액 합산과 일치하는지 확인', '모달 하단 전체 합계가 매출계 - 매입계와 일치하는지 확인'] },
+      { id: 'pm-modal-05', tc: 'TC-PM-M-05', steps: ['저장 버튼 클릭 → 모달 닫히고 View 실적 섹션 매출액이 저장한 값과 일치하는지 확인', '저장 후 계획 대비 차이 섹션 수치가 재계산되는지 확인'] },
+    ]
+  },
+  {
+    id: 'wr-list', title: 'Work Report > List',
+    items: [
+      { id: 'wr-list-01', tc: 'TC-WR-L-01', steps: ['오늘 날짜로 조회 → 오늘 날짜 업무일지 목록만 나오는지 확인'] },
+      { id: 'wr-list-02', tc: 'TC-WR-L-02', steps: ['부문 경영부문 선택 후 부서 드롭다운에 경영지원팀, 재무기획팀 등 소속 부서가 나오는지 확인', '경영부문 + 재무기획팀 선택 후 조회 → 목록 모든 행 부서 컬럼이 재무기획팀인지 확인'] },
+      { id: 'wr-list-03', tc: 'TC-WR-L-03', steps: ['작성하지 않은 행의 상태 컬럼이 미작성인지 확인'] },
+      { id: 'wr-list-04', tc: 'TC-WR-L-04', steps: ['목록의 특정 행 클릭 → Work Report View/Edit 모달이 열리는지 확인', '모달에 해당 날짜가 표시되는지 확인', '모달에 해당 사용자 정보가 표시되는지 확인'] },
+    ]
+  },
+  {
+    id: 'wr-edit', title: 'Work Report > View/Edit (모달)',
+    items: [
+      { id: 'wr-edit-01', tc: 'TC-WR-E-01', steps: ['제목이 업무일지-해당날짜 형식으로 자동 채워지고 수정 불가인지 확인', '작성일이 자동으로 채워지고 수정 불가인지 확인'] },
+      { id: 'wr-edit-02', tc: 'TC-WR-E-02', steps: ['업무내용 테이블의 추가 버튼 클릭 → 새 행 1개가 추가되는지 확인', '삭제 버튼 클릭 → 해당 행이 제거되는지 확인'] },
+      { id: 'wr-edit-03', tc: 'TC-WR-E-03', steps: ['업무구분에서 프로젝트 선택 → 프로젝트명 드롭다운이 활성화되는지 확인', '업무구분에서 부서업무 선택 → 프로젝트명 드롭다운이 비활성화(선택 불가)인지 확인', '업무구분에서 연차 선택 → 프로젝트명 드롭다운이 비활성화인지 확인'] },
+      { id: 'wr-edit-04', tc: 'TC-WR-E-04', steps: ['소요시간 120분 선택 후 저장 → 저장된 소요시간이 120분으로 표시되는지 확인', '소요시간 480분(종일) 선택 후 저장 → 저장된 소요시간이 480분으로 표시되는지 확인'] },
+      { id: 'wr-edit-05', tc: 'TC-WR-E-05', steps: ['작업내용 비운 채로 저장 클릭 → 저장 안 되는지 확인', '업무구분 프로젝트 선택 후 프로젝트명 선택 안 한 채 저장 → 저장 안 되는지 확인'] },
+      { id: 'wr-edit-06', tc: 'TC-WR-E-06', steps: ['저장 버튼 클릭 → 모달 닫히는지 확인', 'List에서 해당 행 상태가 작성완료로 바뀌는지 확인'] },
+      { id: 'wr-edit-07', tc: 'TC-WR-E-07', steps: ['내부인력 공수가 입력된 Work Report 저장', 'Project Management View 공수 비교표 Work Report 컬럼 값이 갱신되는지 확인'] },
+    ]
+  },
+];
+
+// ── Login ──────────────────────────────────────────────────
+function login() {
+  const val = document.getElementById('usernameInput').value.trim();
+  if (!val) return;
+  currentUser = val;
+  isAdmin = (val === 'hphong');
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  document.getElementById('userBadge').textContent = currentUser + (isAdmin ? ' (관리자)' : '');
+  if (isAdmin) {
+    renderAdmin();
+  } else {
+    loadAndRenderChecklist(currentUser, false);
+  }
+}
+document.getElementById('usernameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') login();
+});
+
+// URL 어디에든 hphong 이 들어가면 자동 로그인 (path/hash/query 모두 지원)
+if (location.pathname.includes('hphong')
+    || location.hash.includes('hphong')
+    || location.search.includes('hphong')) {
+  document.getElementById('usernameInput').value = 'hphong';
+  login();
+}
+
+// ── Admin ──────────────────────────────────────────────────
+async function renderAdmin() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<div class="loading">사용자 목록 불러오는 중...</div>';
+  document.getElementById('saveBar').style.display = 'none';
+
+  try {
+    const snapshot = await checklistCol.get();
+    const users = {};
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      if (d.username) users[d.username] = d;
+    });
+
+    const userNames = Object.keys(users);
+    const totalTc = SECTIONS.reduce((a, s) => a + s.items.length, 0);
+
+    // 사용자별 전체 집계
+    const userStats = {};
+    userNames.forEach(uname => {
+      const res = users[uname].results || {};
+      let pass = 0, fail = 0;
+      SECTIONS.forEach(s => s.items.forEach(item => {
+        if (res[item.id]?.status === 'pass') pass++;
+        if (res[item.id]?.status === 'fail') fail++;
+      }));
+      userStats[uname] = { pass, fail, done: pass + fail };
+    });
+
+    let html = `<div class="admin-header">
+      <h2>전체 테스트 현황</h2>
+      <p>${userNames.length}명 · 총 ${totalTc}개 TC</p>
+    </div>`;
+
+    if (userNames.length === 0) {
+      html += '<div class="loading" style="padding:40px">아직 작성한 사용자가 없습니다</div>';
+      mc.innerHTML = html;
+      return;
+    }
+
+    // 사용자별 요약 바
+    html += '<div class="admin-summary">';
+    userNames.forEach(uname => {
+      const s = userStats[uname];
+      const pct = Math.round(s.done / totalTc * 100);
+      html += `<div class="admin-summary-item">
+        <strong>${uname}</strong> &nbsp;PASS ${s.pass} · FAIL ${s.fail} · ${pct}%
+      </div>`;
+    });
+    html += '</div>';
+
+    // TC × 사용자 집계 테이블
+    html += '<div class="admin-table-wrap"><table class="admin-table"><thead><tr>';
+    html += '<th>TC</th><th style="min-width:300px">내용</th>';
+    userNames.forEach(uname => {
+      html += `<th class="user-col">${uname}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+
+    SECTIONS.forEach(sec => {
+      html += `<tr class="section-row"><td colspan="${2 + userNames.length}">${sec.title}</td></tr>`;
+      sec.items.forEach(item => {
+        html += `<tr>
+          <td class="tc-id">${item.tc}</td>
+          <td>${item.steps[0]}</td>`;
+        userNames.forEach(uname => {
+          const res = users[uname].results || {};
+          const st = res[item.id]?.status;
+          const entry = res[item.id] || {};
+          const reason = (entry.reason || '').replace(/'/g, '&#39;');
+          const remark = (entry.remark || '').replace(/'/g, '&#39;');
+          const hasComment = reason || remark;
+          const badge = st === 'pass'
+            ? '<span class="cell-pass">PASS</span>'
+            : st === 'fail'
+              ? '<span class="cell-fail">FAIL</span>'
+              : '<span class="cell-none">-</span>';
+          const btn = hasComment
+            ? `<br><button class="cell-comment-btn" onclick="openCommentModal('${item.tc}','${uname}','${reason}','${remark}')">💬 메모</button>`
+            : '';
+          html += `<td class="user-cell">${badge}${btn}</td>`;
+        });
+        html += '</tr>';
+      });
+
+      // 섹션 그밖의 비고사항 행
+      const secRemarkKey = '__remark__' + sec.id;
+      const hasAnySecRemark = userNames.some(u => (users[u].results || {})[secRemarkKey]);
+      if (hasAnySecRemark) {
+        html += `<tr><td class="tc-id" style="color:#aaa">비고</td><td style="font-size:11px;color:#aaa">그밖의 비고사항</td>`;
+        userNames.forEach(uname => {
+          const sr = ((users[uname].results || {})[secRemarkKey] || '').replace(/'/g, '&#39;');
+          const btn = sr
+            ? `<button class="cell-comment-btn" onclick="openCommentModal('그밖의 비고사항','${uname}','','${sr}')">💬 보기</button>`
+            : '<span class="cell-none">-</span>';
+          html += `<td class="user-cell">${btn}</td>`;
+        });
+        html += '</tr>';
+      }
+    });
+
+    html += '</tbody></table></div>';
+    mc.innerHTML = html;
+  } catch(e) {
+    mc.innerHTML = '<div class="loading">불러오기 실패: ' + e.message + '</div>';
+  }
+}
+
+// ── Comment Modal ─────────────────────────────────────────
+function openCommentModal(tc, uname, reason, remark) {
+  document.getElementById('commentModalTitle').textContent = `${tc} — ${uname}`;
+  let body = '';
+  if (reason) body += `<div class="comment-modal-row"><div class="comment-modal-label">실패 사유</div><div class="comment-modal-text">${reason}</div></div>`;
+  if (remark) body += `<div class="comment-modal-row"><div class="comment-modal-label">비고</div><div class="comment-modal-text">${remark}</div></div>`;
+  document.getElementById('commentModalBody').innerHTML = body;
+  document.getElementById('commentModalOverlay').classList.add('show');
+}
+function closeCommentModal(e) {
+  if (e && e.target !== document.getElementById('commentModalOverlay')) return;
+  document.getElementById('commentModalOverlay').classList.remove('show');
+}
+
+// ── Load & Render Checklist ────────────────────────────────
+async function loadAndRenderChecklist(username, readonly) {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<div class="loading">체크리스트 불러오는 중...</div>';
+
+  try {
+    const doc = await checklistCol.doc(username).get();
+    results = doc.exists ? (doc.data().results || {}) : {};
+    lastSaved = doc.exists ? doc.data().updatedAt : null;
+  } catch(e) {
+    results = {};
+  }
+
+  renderChecklist(readonly);
+  updateProgress();
+
+  if (!readonly) {
+    document.getElementById('saveBar').style.display = 'flex';
+    updateSaveInfo();
+  } else {
+    document.getElementById('saveBar').style.display = 'none';
+  }
+}
+
+function renderChecklist(readonly) {
+  const mc = document.getElementById('mainContent');
+  if (readonly) mc.classList.add('readonly-mode');
+  else mc.classList.remove('readonly-mode');
+
+  let html = '';
+
+  SECTIONS.forEach(sec => {
+    html += `<div class="section-block">
+      <div class="section-title">${sec.title}</div>`;
+    sec.items.forEach((item, idx) => {
+      const r = results[item.id] || { status: null, reason: '', remark: '' };
+      const statusBadge = r.status === 'pass'
+        ? '<span class="badge badge-pass">PASS</span>'
+        : r.status === 'fail'
+          ? '<span class="badge badge-fail">FAIL</span>'
+          : '<span class="badge badge-pending">미완료</span>';
+
+      const stepsHtml = item.steps.map((s, i) =>
+        `<span class="step-num">${i + 1}.</span>${s}<br>`
+      ).join('');
+
+      const failDisplay = r.status === 'fail' ? 'block' : 'none';
+      const passActive = r.status === 'pass' ? 'active' : '';
+      const failActive = r.status === 'fail' ? 'active' : '';
+
+      html += `<div class="test-item" id="item-${item.id}">
+        <div class="test-item-row">
+          <div class="test-item-num">${item.tc}</div>
+          <div class="test-item-desc">${stepsHtml}</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;padding-top:2px">
+            ${statusBadge}
+            <div class="check-group">
+              <button class="check-btn pass-btn ${passActive}" onclick="setStatus('${item.id}','pass')">PASS</button>
+              <button class="check-btn fail-btn ${failActive}" onclick="setStatus('${item.id}','fail')">FAIL</button>
+            </div>
+          </div>
+        </div>
+        <div class="fail-reason" id="fail-${item.id}" style="display:${failDisplay}">
+          <input type="text" placeholder="실패 사유를 입력하세요" value="${r.reason || ''}"
+            oninput="setReason('${item.id}', this.value)">
+        </div>
+        <div class="remark-row">
+          <textarea placeholder="비고 (선택사항)" oninput="setRemark('${item.id}', this.value)">${r.remark || ''}</textarea>
+        </div>
+      </div>`;
+    });
+
+    // 섹션 하단 비고
+    const secRemarkKey = '__remark__' + sec.id;
+    const secRemark = results[secRemarkKey] || '';
+    html += `<div class="remark-row" style="padding: 4px 16px 16px;">
+      <label style="font-size:11px;color:#888;display:block;margin-bottom:4px">그밖의 비고사항</label>
+      <textarea placeholder="섹션 전체에 대한 기타 비고를 입력하세요" oninput="setSectionRemark('${sec.id}', this.value)">${secRemark}</textarea>
+    </div>`;
+    html += '</div>';
+  });
+
+  mc.innerHTML = html;
+}
+
+// ── Auto-save ──────────────────────────────────────────────
+let debounceTimer = null;
+
+function autoSave() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => saveAll(true), 3000);
+}
+
+// ── Interactions ───────────────────────────────────────────
+function setStatus(itemId, status) {
+  if (!results[itemId]) results[itemId] = { status: null, reason: '', remark: '' };
+  results[itemId].status = status;
+
+  // badge 갱신
+  const itemEl = document.getElementById('item-' + itemId);
+  const badge = itemEl.querySelector('.badge');
+  badge.className = status === 'pass' ? 'badge badge-pass' : 'badge badge-fail';
+  badge.textContent = status === 'pass' ? 'PASS' : 'FAIL';
+
+  // button active
+  itemEl.querySelector('.pass-btn').classList.toggle('active', status === 'pass');
+  itemEl.querySelector('.fail-btn').classList.toggle('active', status === 'fail');
+
+  // fail reason
+  const failEl = document.getElementById('fail-' + itemId);
+  failEl.style.display = status === 'fail' ? 'block' : 'none';
+  if (status === 'pass') results[itemId].reason = '';
+
+  updateProgress();
+  saveAll(true); // 체크 즉시 저장
+}
+
+function setReason(itemId, val) {
+  if (!results[itemId]) results[itemId] = { status: null, reason: '', remark: '' };
+  results[itemId].reason = val;
+  autoSave();
+}
+
+function setRemark(itemId, val) {
+  if (!results[itemId]) results[itemId] = { status: null, reason: '', remark: '' };
+  results[itemId].remark = val;
+  autoSave();
+}
+
+function setSectionRemark(secId, val) {
+  results['__remark__' + secId] = val;
+  autoSave();
+}
+
+function updateProgress() {
+  let total = 0, done = 0;
+  SECTIONS.forEach(s => s.items.forEach(item => {
+    total++;
+    if (results[item.id]?.status) done++;
+  }));
+  document.getElementById('progressLabel').textContent = `${done} / ${total}`;
+  document.getElementById('progressFill').style.width = total ? (done / total * 100) + '%' : '0%';
+}
+
+// ── Save ───────────────────────────────────────────────────
+async function saveAll(silent = false) {
+  try {
+    await checklistCol.doc(currentUser).set({
+      username: currentUser,
+      results: results,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+    lastSaved = new Date();
+    updateSaveInfo();
+  } catch(e) {
+    showToast('저장 실패: ' + e.message);
+  }
+}
+
+function updateSaveInfo() {
+  const el = document.getElementById('saveInfo');
+  if (lastSaved) {
+    const d = lastSaved.toDate ? lastSaved.toDate() : lastSaved;
+    el.textContent = '마지막 저장: ' + d.toLocaleString('ko-KR');
+  } else {
+    el.textContent = '아직 저장하지 않았습니다';
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

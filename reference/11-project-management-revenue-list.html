@@ -1,0 +1,201 @@
+<div class="sub-container-wrap">
+    <section class="sub-container">
+      <div class="component-wrap">
+        <div class="component-left">
+          <div class="singleYear-calendar-container">
+            <div class="calendar-container-item">
+              <input id="proposeYear01" class="calendar-input single-date" placeholder="날짜 선택" readonly="">
+              <div class="calendar single-date"></div>
+            </div>
+          </div>
+          <div class="custom-select" data-initialized="true">
+            <button type="button" class="select-button">
+              <span class="placeholder">상태 선택</span>
+              <div class="select-arrow"></div>
+            </button>
+            <div class="options-list" id="searchStateCd">
+              <div class="option-item" value="">전체</div>
+              <div class="option-item" value="PRJ0004">진행전</div>
+              <div class="option-item" value="PRJ0001">진행중</div>
+              <div class="option-item" value="PRJ0002">종료</div>
+              <div class="option-item" value="PRJ0003">지연</div>
+            </div>
+            <input type="hidden" name="" value="">
+          </div>
+          <div class="custom-select" style="width: 150px;" data-initialized="true">
+            <button type="button" class="select-button">
+              <span class="placeholder">전체</span>
+              <div class="select-arrow"></div>
+            </button>
+            <div class="options-list" id="searchType">
+              <div class="option-item" value="">전체</div>
+              <div class="option-item" value="projectId">프로젝트ID</div>
+              <div class="option-item" value="projectNm">프로젝트명</div>
+            </div>
+            <input type="hidden" name="searchType" value="">
+          </div>
+          <input id="searchText" type="text" placeholder="검색어를 입력해 주세요.">
+          <button id="btnSearch" class="btn btn-primary btn-large btn-icon-search" type="button">조회</button>
+        </div>
+        <div class="component-right">
+          <button class="btn btn-large btn-icon-excel" type="button">엑셀다운로드</button>
+        </div>
+      </div>
+      <table class="table-row ellipsis">
+        <colgroup>
+          <col style="width: 52px">
+          <col style="width: 110px">
+          <col style="width: 180px">
+          <col style="width: 120px">
+          <col style="width: 96px">
+          <col style="width: 96px">
+          <col style="width: 100px">
+          <col style="width: 100px">
+          <col style="width: 100px">
+          <col style="width: 100px">
+          <col style="width: 100px">
+          <col style="width: 110px">
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">프로젝트ID</th>
+            <th scope="col">프로젝트명</th>
+            <th scope="col">고객사명</th>
+            <th scope="col">시작일정</th>
+            <th scope="col">종료일정</th>
+            <th scope="col">(계획)매출액</th>
+            <th scope="col">(계획)매입액</th>
+            <th scope="col">(실적)매출액</th>
+            <th scope="col">(실적)매입액</th>
+            <th scope="col">(회계)매출액</th>
+            <th scope="col">진행률(%)</th> <!-- 매입 -->
+          </tr>
+        </thead>
+        <tbody>
+      			<tr data-list-name="costList" onclick="detailContents.goDetailPage(24)" style="cursor:pointer;">
+      				<td>8</td>
+      				<td>2021-A0001</td>
+      				<td>가나 지속가능개발대학교 학사관리 시스템 및 홈페이지 구축(개발)</td>
+      				<td>(주)그린이엔에스</td>
+      				<td>2021.12.01.</td>
+      				<td>2026.05.19.</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0.00</td>
+      			</tr>
+      			<tr data-list-name="costList" onclick="detailContents.goDetailPage(28)" style="cursor:pointer;">
+      				<td>7</td>
+      				<td>2025-A-0111</td>
+      				<td>홍길동프로젝트</td>
+      				<td>김길동</td>
+      				<td>2025.06.02.</td>
+      				<td>2026.12.31.</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0.00</td>
+      			</tr>
+      			<tr data-list-name="costList" onclick="detailContents.goDetailPage(30)" style="cursor:pointer;">
+      				<td>6</td>
+      				<td>2025-A-1212</td>
+      				<td>감놔라배놔라프로젝트</td>
+      				<td>감배음료</td>
+      				<td>2025.12.01.</td>
+      				<td>2026.01.31.</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0.00</td>
+      			</tr>
+      			<tr data-list-name="costList" onclick="detailContents.goDetailPage(33)" style="cursor:pointer;">
+      				<td>5</td>
+      				<td>B260302</td>
+      				<td>26월3월23일_2</td>
+      				<td>고객사명2_수정</td>
+      				<td>2026.04.01.</td>
+      				<td>2026.04.30.</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0.00</td>
+      			</tr>
+      			<tr data-list-name="costList" onclick="detailContents.goDetailPage(34)" style="cursor:pointer;">
+      				<td>4</td>
+      				<td>B260303</td>
+      				<td>테스트</td>
+      				<td>ㄴㄴㄴ</td>
+      				<td>2026.03.03.</td>
+      				<td>2026.03.30.</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0.00</td>
+      			</tr>
+      			<tr data-list-name="costList" onclick="detailContents.goDetailPage(37)" style="cursor:pointer;">
+      				<td>3</td>
+      				<td>D260301</td>
+      				<td>432423</td>
+      				<td>432432</td>
+      				<td>2025.12.01.</td>
+      				<td>2026.03.11.</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0</td>
+      				<td class="text-wrap alignRight">0.00</td>
+      			</tr>
+      			<tr data-list-name="costList" onclick="detailContents.goDetailPage(40)" style="cursor:pointer;">
+      				<td>2</td>
+      				<td>D260401</td>
+      				<td>개발_테스트</td>
+      				<td>테스트</td>
+      				<td>2026.02.01.</td>
+      				<td>2027.03.01.</td>
+      				<td class="text-wrap alignRight">22,000,000</td>
+      				<td class="text-wrap alignRight">21,000,000</td>
+      				<td class="text-wrap alignRight">22,000,000</td>
+      				<td class="text-wrap alignRight">21,000,000</td>
+      				<td class="text-wrap alignRight">22,000,000</td>
+      				<td class="text-wrap alignRight">100.00</td>
+      			</tr>
+      			<tr data-list-name="costList" onclick="detailContents.goDetailPage(42)" style="cursor:pointer;">
+      				<td>1</td>
+      				<td>G260401</td>
+      				<td>고도화_테스트</td>
+      				<td>고도화_고객사</td>
+      				<td>2026.04.10.</td>
+      				<td>2026.05.29.</td>
+      				<td class="text-wrap alignRight">255,000,000</td>
+      				<td class="text-wrap alignRight">111,000,000</td>
+      				<td class="text-wrap alignRight">205,200,000</td>
+      				<td class="text-wrap alignRight">51,000,000</td>
+      				<td class="text-wrap alignRight">117,162,162</td>
+      				<td class="text-wrap alignRight">45.95</td>
+      			</tr></tbody>
+      </table>
+      <div class="pagination-wrap">
+        <div class="pagination-btn-wrap">
+          <button class="pagination-btn pagination-btn-first" type="button" disabled=""></button>
+          <button class="pagination-btn pagination-btn-prev" type="button" disabled=""></button>
+        </div>
+        <div class="pagination-link-wrap"><a href="#" class="pagination-link active" data-page="1">1</a></div>
+        <div class="pagination-btn-wrap">
+          <button class="pagination-btn pagination-btn-next" type="button" disabled=""></button>
+          <button class="pagination-btn pagination-btn-last" type="button" disabled=""></button>
+        </div>
+      </div>
+    </section>
+  </div>

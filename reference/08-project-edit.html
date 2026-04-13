@@ -1,0 +1,354 @@
+<div class="popup-content" style="width: 1284px;">
+    <div class="popup-header">
+      <h3 class="popup-title">PROJECT</h3>
+    </div>
+    <div class="popup-body">
+      <div class="input_group_wrap">
+        <div class="input_group">
+          <div class="input_label half">
+            <span class="input-text required">프로젝트ID</span>
+            <input data-key="projectId" data-type="string" data-required="true" data-label="프로젝트ID" type="text" readonly="" disabled="">
+          </div>
+
+          <div class="input_label half">
+            <span class="input-text required">프로젝트명</span>
+            <input data-key="projectNm" data-type="string" data-required="true" data-label="프로젝트명" type="text" readonly="" disabled="">
+          </div>
+        </div>
+
+        <div class="input_group">
+          <div class="input_label half">
+            <span class="input-text required">고객사명</span>
+            <input data-key="clientNm" data-type="string" data-required="true" data-label="고객사명" type="text" readonly="" disabled="">
+          </div>
+        </div>
+
+        <!-- <div class="input_group">
+          <div class="input_label half">
+            <span class="input-text required">사업시작일</span>
+            <div class="date-calendar-container">
+              <div class="calendar-container-item">
+                <input id="bizSartDt" data-key="bizSartDt" class="calendar-input date-picker updatePop"
+                  placeholder="날짜 선택" data-type="date" data-required="true" data-label="사업시작일" data-date-role="start"
+                  readonly />
+                <div class="calendar-popup"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="input_label half">
+            <span class="input-text required">사업종료일</span>
+            <div class="date-calendar-container">
+              <div class="calendar-container-item">
+                <input id="bizEndDt" data-key="bizEndDt" class="calendar-input date-picker updatePop"
+                  placeholder="날짜 선택" data-type="date" data-required="true" data-label="사업종료일" data-date-role="end"
+                  readonly />
+                <div class="calendar-popup"></div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="input_group">
+          <div class="input_label half">
+            <span class="input-text required">참여형태</span>
+            <div class="custom-select" data-initialized="true">
+              <button type="button" class="select-button">
+                <span data-key="involvedCdNm" data-type="text">단독수행</span>
+                <div class="select-arrow"></div>
+              </button>
+              <div class="options-list" id="involvedCd" data-key="involvedCd" data-type="customSelect" data-required="true" data-label="참여형태">
+                <div class="option-item selected" value="PRT0001">단독수행</div>
+                <div class="option-item" value="PRT0002">컨소시엄-주관사</div>
+                <div class="option-item" value="PRT0003">컨소시엄-협력사</div>
+                <div class="option-item" value="PRT0004">하도급</div>
+              </div>
+              <input type="hidden" name="involvedCd" data-key="involvedCd" data-type="string" value="PRT0001">
+            </div>
+          </div>
+
+          <div class="input_label half">
+            <span class="input-text required">진행상태</span>
+            <div class="custom-select" data-initialized="true">
+              <button type="button" class="select-button">
+                <span data-key="stateCdNm" data-type="text">진행전</span>
+                <div class="select-arrow"></div>
+              </button>
+              <div class="options-list" id="stateCd" data-key="stateCd" data-type="customSelect" data-required="true" data-label="진행상태">
+                <div class="option-item selected" value="PRJ0004">진행전</div>
+                <div class="option-item" value="PRJ0001">진행중</div>
+                <div class="option-item" value="PRJ0002">종료</div>
+                <div class="option-item" value="PRJ0003">지연</div>
+              </div>
+              <input type="hidden" name="stateCd" data-type="string" data-key="stateCd" value="PRJ0004">
+            </div>
+          </div>
+
+          <!-- <div class="input_label half">
+            <span class="input-text required">발주금액</span>
+            <input id="orderVal" data-key="orderVal" data-type="number" data-required="true" data-label="발주금액"
+              type="text" />
+          </div> -->
+        </div>
+
+        <!-- <div class="input_group">
+          <div class="input_label half">
+            <span class="input-text required">프로젝트 수주금액</span>
+            <div class="input_group">
+              <input id="ordersRate" data-key="ordersRate" data-type="numberRate" data-required="true"
+                data-label="프로젝트 수주금액(비율)" type="text" class="small_input number-decimal" />
+              <input id="ordersVal" data-key="ordersVal" data-type="number" data-required="true"
+                data-label="프로젝트 수주금액" type="text" readonly disabled />
+            </div>
+          </div>
+
+          <div class="input_label half">
+            <span class="input-text required">프로젝트 지분비율(%)</span>
+            <div class="input_group">
+              <input id="stakeRate" data-key="stakeRate" data-type="numberRate" data-required="true"
+                data-label="프로젝트 지분비율(비율)" type="text" class="small_input number-decimal" />
+              <input id="stakeVal" data-key="stakeVal" data-type="number" data-required="true"
+                data-label="프로젝트 지분비율(금액)" type="text" readonly disabled />
+            </div>
+          </div>
+        </div> -->
+
+        <!-- <div class="input_group">
+          <div class="input_label half">
+            <span class="input-text required">실 수주금액</span>
+            <input id="realOrdersVal" data-key="realOrdersVal" data-type="number" data-required="true"
+              data-label="실 수주금액" type="text" readonly disabled />
+          </div>
+
+          <div class="input_label half">
+            <span class="input-text required">예상수익률</span>
+            <div class="input_group">
+              <input id="expectRate" data-key="expectRate" data-type="numberRate" data-required="true"
+                data-label="예상수익률" type="text" class="small_input number-decimal" />
+              <input id="expectVal" data-key="expectVal" data-type="number" data-required="true" data-label="예상수익률"
+                type="text" readonly disabled />
+            </div>
+          </div>
+        </div> -->
+
+        <div class="financial-section">
+          <div class="financial-header">
+            <button class="btn btn-primary btn-small open-popup" type="button" data-target="popup-sales-input">+ 매출/매입
+              수정</button>
+          </div>
+          <div class="input_group financial-group">
+            <div class="financial-group-main">
+              <div class="input_label">
+                <strong class="input-text">매출액(계)</strong>
+                <input type="text" id="financialSalesTotal" class="input-text number financial-value--bold" value="" readonly="">
+              </div>
+            </div>
+            <div class="financial-group-sub">
+              <div class="input_label">
+                <span class="input-text">자사제품매출</span>
+                <input type="text" id="financialSalesProduct" class="input-text number" value="" readonly="">
+              </div>
+              <div class="input_label">
+                <span class="input-text">외부상품매출</span>
+                <input type="text" id="financialSalesGoods" class="input-text number" value="" readonly="">
+              </div>
+              <div class="input_label">
+                <span class="input-text">용역매출</span>
+                <input type="text" id="financialSalesService" class="input-text number" value="" readonly="">
+              </div>
+            </div>
+          </div>
+          <div class="input_group financial-group">
+            <div class="financial-group-main">
+              <div class="input_label">
+                <strong class="input-text">매입원가(계)</strong>
+                <input type="text" id="financialPurchaseTotal" class="input-text number financial-value--bold" value="" readonly="">
+              </div>
+            </div>
+            <div class="financial-group-sub">
+              <div class="input_label">
+                <span class="input-text">제품원가</span>
+                <input type="text" id="financialPurchaseProduct" class="input-text number" value="" readonly="">
+              </div>
+              <div class="input_label">
+                <span class="input-text">상품매입원가</span>
+                <input type="text" id="financialPurchaseGoods" class="input-text number" value="" readonly="">
+              </div>
+              <div class="input_label">
+                <span class="input-text">외부용역매입</span>
+                <input type="text" id="financialPurchaseExternal" class="input-text number" value="" readonly="">
+              </div>
+              <div class="input_label">
+                <span class="input-text">내부용역원가</span>
+                <input type="text" id="financialPurchaseInternal" class="input-text number" value="" readonly="">
+              </div>
+              <div class="input_label">
+                <span class="input-text">프로젝트 경비</span>
+                <input type="text" id="financialPurchaseExpense" class="input-text number" value="" readonly="">
+              </div>
+            </div>
+          </div>
+          <div class="input_group financial-group financial-group--profit">
+            <div class="financial-group-sub">
+              <div class="input_label">
+                <strong class="input-text">매출총이익</strong>
+                <input type="text" id="financialProfitAmount" class="input-text number financial-value--bold" value="" readonly="">
+              </div>
+              <div class="input_label">
+                <strong class="input-text">매출총이익율</strong>
+                <input type="text" id="financialProfitRate" class="input-text financial-value--bold" value="" readonly="">
+              </div>
+            </div>
+            <div class="financial-group-sub financial-group-sub--highlight">
+              <div class="input_label">
+                <strong class="input-text">매출총이익<span class="financial-label--highlight">(내부인력 제외 기준)</span></strong>
+                <input type="text" id="financialProfitAmountExcludeInternal" class="input-text number financial-value--bold" value="" readonly="">
+              </div>
+              <div class="input_label">
+                <strong class="input-text">매출총이익율<span class="financial-label--highlight">(내부인력 제외 기준)</span></strong>
+                <input type="text" id="financialProfitRateExcludeInternal" class="input-text financial-value--bold" value="" readonly="">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="input_group">
+          <div class="input_label half">
+            <span class="input-text required">영업담당</span>
+            <div class="input_select-wrap" id="div_sales">
+              <div class="custom-select biz-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">사업부문</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="salesBiz" data-type="customSelect" data-required="true" data-label="영업담당 부문"><div class="option-item" value="">부문 선택</div><div class="option-item selected" data-value="BIZ0001">사업부문</div><div class="option-item" data-value="BIZ0002">연구개발부문</div><div class="option-item" data-value="BIZ0003">경영부문</div><div class="option-item" data-value="BIZ0004">기타</div><div class="option-item" data-value="BIZ0005">임원</div></div>
+                <input type="hidden" name="salesBiz" value="BIZ0001">
+              </div>
+              <div class="custom-select dept-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">AX사업부</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="salesDept" data-type="customSelect" data-required="true" data-label="영업담당 부서"><div class="option-item" value="">부서 선택</div><div class="option-item selected" data-value="DEP0001">AX사업부</div><div class="option-item" data-value="DEP0002">ICT사업부</div><div class="option-item" data-value="DEP0003">전략사업부</div><div class="option-item" data-value="DEP0013">컨설팅사업부</div><div class="option-item" data-value="DEP0016">3D솔루션사업부</div></div>
+                <input type="hidden" name="salesDept" value="DEP0001">
+              </div>
+              <div class="custom-select member-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">박수철</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="salesMngId" data-type="customSelect" data-required="true" data-label="영업담당 부서 인원"><div class="option-item" value="">선택하세요</div><div class="option-item selected" value="0004">박수철</div></div>
+                <input type="hidden" name="member_sales" value="">
+              </div>
+            </div>
+          </div>
+
+          <div class="input_label half">
+            <span class="input-text required">사업관리</span>
+            <div class="input_select-wrap" id="div_business">
+              <div class="custom-select biz-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">사업부문</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="bizBiz" data-type="customSelect" data-required="true" data-label="사업관리 부문"><div class="option-item" value="">부문 선택</div><div class="option-item selected" data-value="BIZ0001">사업부문</div><div class="option-item" data-value="BIZ0002">연구개발부문</div><div class="option-item" data-value="BIZ0003">경영부문</div><div class="option-item" data-value="BIZ0004">기타</div><div class="option-item" data-value="BIZ0005">임원</div></div>
+                <input type="hidden" name="bizBiz" value="BIZ0001">
+              </div>
+              <div class="custom-select dept-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">AX사업부</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="bizDept" data-type="customSelect" data-required="true" data-label="사업관리 부서"><div class="option-item" value="">부서 선택</div><div class="option-item selected" data-value="DEP0001">AX사업부</div><div class="option-item" data-value="DEP0002">ICT사업부</div><div class="option-item" data-value="DEP0003">전략사업부</div><div class="option-item" data-value="DEP0013">컨설팅사업부</div><div class="option-item" data-value="DEP0016">3D솔루션사업부</div></div>
+                <input type="hidden" name="bizDept" value="DEP0001">
+              </div>
+              <div class="custom-select member-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">박수철</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="bizMngId" data-type="customSelect" data-required="true" data-label="사업관리 부서 인원"><div class="option-item" value="">선택하세요</div><div class="option-item selected" value="0004">박수철</div></div>
+                <input type="hidden" name="bizMngId" value="">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="input_group">
+          <div class="input_label half">
+            <span class="input-text required">수행담당</span>
+            <div class="input_select-wrap" id="div_finance">
+
+              <div class="custom-select biz-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">사업부문</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="perforBiz" data-type="customSelect" data-required="true" data-label="수행담당 부문"><div class="option-item" value="">부문 선택</div><div class="option-item selected" data-value="BIZ0001">사업부문</div><div class="option-item" data-value="BIZ0002">연구개발부문</div><div class="option-item" data-value="BIZ0003">경영부문</div><div class="option-item" data-value="BIZ0004">기타</div><div class="option-item" data-value="BIZ0005">임원</div></div>
+                <input type="hidden" name="perforBiz" value="BIZ0001">
+              </div>
+              <div class="custom-select dept-select" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">AX사업부</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="perforDept" data-type="customSelect" data-required="true" data-label="수행담당 부서"><div class="option-item" value="">부서 선택</div><div class="option-item selected" data-value="DEP0001">AX사업부</div><div class="option-item" data-value="DEP0002">ICT사업부</div><div class="option-item" data-value="DEP0003">전략사업부</div><div class="option-item" data-value="DEP0013">컨설팅사업부</div><div class="option-item" data-value="DEP0016">3D솔루션사업부</div></div>
+                <input type="hidden" name="perforDept" value="DEP0001">
+              </div>
+              <div class="custom-select member-select" data-key="perforMngId" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">박수철</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="perforMngId" data-type="customSelect" data-required="true" data-label="수행담당 부서 인원"><div class="option-item" value="">선택하세요</div><div class="option-item selected" value="0004">박수철</div></div>
+                <input type="hidden" name="perforMngId" value="">
+              </div>
+            </div>
+          </div>
+
+          <div class="input_label half">
+            <span class="input-text">재무담당</span>
+            <div class="input_select-wrap" id="div_project">
+              <div class="custom-select biz-select" data-key="financeBiz" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">사업부문</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="financeBiz" data-type="customSelect" data-label="재무담당 부문"><div class="option-item" value="">부문 선택</div><div class="option-item selected" data-value="BIZ0001">사업부문</div><div class="option-item" data-value="BIZ0002">연구개발부문</div><div class="option-item" data-value="BIZ0003">경영부문</div><div class="option-item" data-value="BIZ0004">기타</div><div class="option-item" data-value="BIZ0005">임원</div></div>
+                <input type="hidden" name="financeBiz" value="BIZ0001">
+              </div>
+              <div class="custom-select dept-select" data-key="financeDept" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">AX사업부</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="financeDept" data-type="customSelect" data-label="재무담당 부서"><div class="option-item" value="">부서 선택</div><div class="option-item selected" data-value="DEP0001">AX사업부</div><div class="option-item" data-value="DEP0002">ICT사업부</div><div class="option-item" data-value="DEP0003">전략사업부</div><div class="option-item" data-value="DEP0013">컨설팅사업부</div><div class="option-item" data-value="DEP0016">3D솔루션사업부</div></div>
+                <input type="hidden" name="financeDept" value="DEP0001">
+              </div>
+              <div class="custom-select member-select" data-key="financeMngId" data-initialized="true">
+                <button type="button" class="select-button">
+                  <span class="">박수철</span>
+                  <div class="select-arrow"></div>
+                </button>
+                <div class="options-list" id="financeMngId" data-type="customSelect" data-label="재무담당 부서 인원"><div class="option-item" value="">선택하세요</div><div class="option-item selected" value="0004">박수철</div></div>
+                <input type="hidden" name="financeMngId" value="">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="input_group">
+          <div class="input_label">
+            <span class="input-text required">비고</span>
+            <textarea id="note" data-type="string" data-key="note"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-wrap">
+        <button class="btn btn-large close-popup" type="button">취소</button>
+        <button class="btn btn-primary btn-large" type="button" id="btnSaveProject"> 저장
+        </button>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,229 @@
+<div class="sub-container-inner">
+    <h2 class="sub-container-title sub-container-title-between">기본정보
+
+      <div class="btn-wrap">
+        <button class="btn btn-large btn-outline btn-icon-pdf" onclick="bindPrintButton()" type="button">PDF
+          다운로드</button>
+      </div>
+    </h2>
+
+    <table class="table-col detail-table">
+      <colgroup>
+        <col style="width: 200px;">
+        <col style="width: 274px;">
+        <col style="width: 200px;">
+        <col style="width: 274px;">
+        <col style="width: 200px;">
+        <col style="width: 274px;">
+      </colgroup>
+      <tbody>
+        <tr>
+          <th class="text-wrap alignLeft" scope="row">프로젝트ID</th>
+          <td>G260401</td>
+          <th class="text-wrap alignLeft" scope="row">고객사명</th>
+          <td>고도화_고객사</td>
+          <th class="text-wrap alignLeft" scope="row">사업기간</th>
+          <td>
+            <span>2026-04-10 ~ 2026-05-29</span>
+            
+          </td>
+        </tr>
+        <tr>
+          <th class="text-wrap alignLeft" scope="row">프로젝트명</th>
+          <td colspan="5">고도화_테스트</td>
+        </tr>
+        <tr>
+          <th class="text-wrap alignLeft" scope="row">총 사업비</th>
+          <td class="text-wrap alignRight verticalMiddle">500,000,000</td>
+          <th class="text-wrap alignLeft" scope="row">자사 발주금액</th>
+          <td class="text-wrap alignRight verticalMiddle">250,000,000</td>
+          <th></th>
+          <td></td>
+        </tr>
+        <tr>
+          <th class="text-wrap alignLeft" scope="row">매출액</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicTotalSalesAmt">250,000,000</span></td>
+          <th class="text-wrap alignLeft" scope="row">매입액</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicTotalPurchaseCost">110,000,000</span></td>
+          <th class="text-wrap alignLeft" scope="row">매출총이익</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicGrossProfit">140,000,000</span></td>
+        </tr>
+        <tr>
+          <th class="text-wrap alignLeft" scope="row">　자사제품매출</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicOwnProductSalesAmt">250,000,000</span></td>
+          <th class="text-wrap alignLeft" scope="row">　제품원가</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicProductCost">100,000,000</span></td>
+          <th class="text-wrap alignLeft" scope="row">　매출총이익율</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicGrossProfitRate">56.00%</span></td>
+        </tr>
+        <tr>
+          <th class="text-wrap alignLeft" scope="row">　외부상품매출</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicExtProductSalesAmt">0</span></td>
+          <th class="text-wrap alignLeft" scope="row">　상품매입원가</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicGoodsPurchaseCost">0</span></td>
+          <th class="text-wrap alignLeft" scope="row">　매출이익<br>　(내부인력 제외 기준)</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicGrossProfitExcInternal">150,000,000</span></td>
+        </tr>
+        <tr>
+          <th class="text-wrap alignLeft" scope="row">　용역매출</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicServiceSalesAmt">0</span></td>
+          <th class="text-wrap alignLeft" scope="row">　외부용역매입</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicExtServiceCost">0</span></td>
+          <th class="text-wrap alignLeft" scope="row">　매출총이익율<br>　(내부인력 제외 기준)</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicGrossProfitRateExcInternal">60.00%</span></td>
+        </tr>
+        <tr>
+          <th></th>
+          <td class="text-wrap alignRight verticalMiddle"></td>
+          <th class="text-wrap alignLeft" scope="row">　내부용역원가</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicInternalServiceCost">10,000,000</span></td>
+          <th></th>
+          <td class="text-wrap alignRight verticalMiddle"></td>
+        </tr>
+        <tr>
+          <th></th>
+          <td></td>
+          <th class="text-wrap alignLeft" scope="row">　프로젝트 경비</th>
+          <td class="text-wrap alignRight verticalMiddle"><span id="basicProjectExpense">0</span></td>
+          <th></th>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table-col detail-table">
+      <colgroup>
+        <col style="width: 200px;">
+        <col style="width: 274px;">
+        <col style="width: 200px;">
+        <col style="width: 274px;">
+        <col style="width: 200px;">
+        <col style="width: 274px;">
+      </colgroup>
+      <tbody>
+        <tr>
+          <th scope="row">영업 담당자</th>
+          <td>박수철 이사</td>
+          <th scope="row">작성자</th>
+          <td>admin CEO</td>
+          <th scope="row">진행상태</th>
+          <td>수주</td>
+        </tr>
+        <tr>
+          <th scope="row">제안형태</th>
+          <td>제안(비공개 입찰)</td>
+          <th scope="row">투찰일정</th>
+          <td>2026.04.13.</td>
+          <th scope="row">제안일정</th>
+          <td>2026.04.13.</td>
+        </tr>
+        <tr>
+          <th scope="row">비고</th>
+          <td colspan="5">
+            <div class="remarks">비고</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 사업/과제 상세 -->
+    <h2 class="sub-container-title" style="margin-top: 32px;">사업/과제 상세</h2>
+    <table class="table-col detail-table">
+      <colgroup>
+        <col style="width: 200px;">
+        <col style="width: 274px;">
+        <col style="width: 200px;">
+        <col style="width: 274px;">
+        <col style="width: 200px;">
+        <col style="width: 274px;">
+      </colgroup>
+      <tbody>
+        <tr>
+          <th scope="row">원발주처</th>
+          <td colspan="5">원발주처</td>
+        </tr>
+        <tr>
+          <th scope="row">사업 내용 (RFP 요약)</th>
+          <td colspan="5" style="white-space: pre-line;">- 사업내용
+- 사업내용</td>
+        </tr>
+        <tr>
+          <th scope="row">RFP 요구사항 충족도 (심시스, 컨소사)</th>
+          <td colspan="5" style="white-space: pre-line;">- 요구사항 충족도
+- 요구사항 충족도 
+- 요구사항 충족도</td>
+        </tr>
+        <tr>
+          <th scope="row">상세 일정</th>
+          <td colspan="5" style="white-space: pre-line;">- 상세 일정
+- 상세 일정
+- 상세 일정</td>
+        </tr>
+        <tr>
+          <th scope="row">사업 구도</th>
+          <td colspan="5" style="white-space: pre-line;">사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도 사업 구도</td>
+        </tr>
+        <tr>
+          <th scope="row">심시스 수행범위 및 R&amp;R</th>
+          <td colspan="5" style="white-space: pre-line;">- 심시스 수행범위 및 R&amp;R
+- 심시스 수행범위 및 R&amp;R
+- 심시스 수행범위 및 R&amp;R</td>
+        </tr>
+        <tr>
+          <th scope="row">경쟁 구도</th>
+          <td colspan="5">경쟁 구도</td>
+        </tr>
+        <tr>
+          <th scope="row">평가 기준</th>
+          <td colspan="5">평가 기준</td>
+        </tr>
+        <tr>
+          <th scope="row">KSF(Key Success Factor)</th>
+          <td colspan="5" style="white-space: pre-line;">KSF(Key Success Factor)</td>
+        </tr>
+        <tr>
+          <th scope="row">자사 강점 및 Winning Point</th>
+          <td colspan="5" style="white-space: pre-line;">자사 강점 및 Winning Point</td>
+        </tr>
+        <tr>
+          <th scope="row">자사 약점</th>
+          <td colspan="5" style="white-space: pre-line;">자사 약점</td>
+        </tr>
+        <tr>
+          <th scope="row">수주 가능성 및 근거</th>
+          <td colspan="5" style="white-space: pre-line;">수주 가능성 및 근거</td>
+        </tr>
+        <tr>
+          <th scope="row">제안PM</th>
+          <td colspan="5">제안PM</td>
+        </tr>
+        <tr>
+          <th scope="row">제안 Resource</th>
+          <td colspan="5">제안 Resource</td>
+        </tr>
+        <tr>
+          <th scope="row">수행PM</th>
+          <td colspan="5">수행PM</td>
+        </tr>
+        <tr>
+          <th scope="row">수행 Resource</th>
+          <td colspan="5">수행 Resource</td>
+        </tr>
+        <tr>
+          <th scope="row">지원/필요 사항</th>
+          <td colspan="5" style="white-space: pre-line;">- 지원/필요 사항
+- 지원/필요 사항</td>
+        </tr>
+        <tr>
+          <th scope="row">기타</th>
+          <td colspan="5" style="white-space: pre-line;">기타</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 버튼 영역 -->
+    <div class="btn-wrap">
+      <button class="btn btn-outline btn-large" type="button" onclick="location.href='/pms/pj/pre-sales'">목록</button>
+      <button class="btn btn-primary btn-large open-popup" type="button" data-target="popup-layout1" data-target-mode="create" data-setfn="true">수정</button>
+    </div>
+  </div>
