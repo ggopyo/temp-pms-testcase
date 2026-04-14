@@ -25,12 +25,17 @@
     '차장':'중급','과장':'중급',
     '대리':'초급','주임':'초급','사원':'초급'
   };
+  // 등급별 "월" 단가 (원/월). M/D 단위 계산에는 월÷22(근무일수) 한 "일 단가"를 사용해야 한다.
   const GRADE_PRICE = {
     '특급': 10_000_000,
     '고급':  9_000_000,
     '중급':  7_000_000,
     '초급':  5_000_000,
   };
+  const WORKDAYS_PER_MONTH = 22;
+  const GRADE_DAILY_PRICE = Object.fromEntries(
+    Object.entries(GRADE_PRICE).map(([g, p]) => [g, p / WORKDAYS_PER_MONTH])
+  );
   const GRADES = ['특급','고급','중급','초급'];
   // 등급별 계획 M/D (계획 행에 채워 넣을 더미)
   // ※ '특급'은 일부러 0 으로 두어 "계획은 0인데 실적은 발생" 케이스를 시연
@@ -237,10 +242,11 @@
         return;
       }
       const md = r.minutes / 480;
-      const price = GRADE_PRICE[grade];
-      const amount = md * price;
+      const monthlyPrice = GRADE_PRICE[grade];
+      const dailyPrice = GRADE_DAILY_PRICE[grade]; // = monthlyPrice / 22
+      const amount = md * dailyPrice;              // 일 단가로 계산
       buckets[grade][ym] += amount;
-      breakdown[`${grade}|${ym}`].push({ ...r, grade, md, price, amount });
+      breakdown[`${grade}|${ym}`].push({ ...r, grade, md, price: dailyPrice, monthlyPrice, amount });
     });
     return { buckets, breakdown, excluded };
   }
@@ -289,16 +295,16 @@
     // 등급별 [계획·실적] 쌍을 순서대로 (특급계획·특급실적 → 고급계획·고급실적 → ...)
     let html = '';
     GRADES.forEach(grade => {
-      const price = GRADE_PRICE[grade];
+      const dailyPrice = GRADE_DAILY_PRICE[grade]; // 모달 단가는 "일 단가" 기준 (qty=M/D 와 단위 정합)
       // 계획
       const planMd = GRADE_PLAN_MD[grade];
-      const planTotal = planMd * price;
+      const planTotal = planMd * dailyPrice;
       const perMonth = colCount > 0 ? planTotal / colCount : 0;
-      html += buildRow('계획', grade, () => perMonth, planMd, price, false);
-      // 실적 (바로 아래)
+      html += buildRow('계획', grade, () => perMonth, planMd, dailyPrice, false);
+      // 실적 (바로 아래) — buckets 는 이미 일 단가 기준 amount 누적
       const actualTotalAmt = monthCols.reduce((a,c)=> a + buckets[grade][monthKey(c)], 0);
-      const actualMd = price > 0 ? actualTotalAmt / price : 0;
-      html += buildRow('실적', grade, c => buckets[grade][monthKey(c)], fmtMd(actualMd), price, true);
+      const actualMd = dailyPrice > 0 ? actualTotalAmt / dailyPrice : 0;
+      html += buildRow('실적', grade, c => buckets[grade][monthKey(c)], fmtMd(actualMd), dailyPrice, true);
     });
 
     // 매입 계획(상품매입 등) 마지막 위치 보존을 위해 "내부인력 계획 그룹" 다음에 삽입
@@ -369,11 +375,11 @@
     const panel = document.createElement('div');
     panel.id = 'perf-panel';
     panel.style.cssText = `
-      position:fixed; top:52px; left:12px; z-index:99998;
-      width: 760px; max-height: calc(100vh - 80px); overflow:auto;
+      position:fixed; top:52px; left:12px; right:12px; bottom:12px; z-index:99998;
+      overflow:auto;
       background:#fff; border:1px solid #999; border-radius:8px;
       box-shadow:0 4px 16px rgba(0,0,0,0.25);
-      padding:14px; display:none; font-size:12px;
+      padding:14px; display:none; font-size:14px;
     `;
     document.body.appendChild(panel);
 
@@ -383,158 +389,161 @@
     return panel;
   }
 
-  function renderPanel(panel, monthCols, buckets, breakdown, excluded) {
-    const monthHeaders = monthCols.map(c => `<th>${c.year}-${c.month}</th>`).join('');
+  function renderPanel(panel, monthCols, _buckets, _breakdown, excluded) {
+    // 통합표 컬럼: 등급 하위열 순서는 사용자 요청대로 초급→중급→고급→특급
+    const SUB_ORDER = ['초급','중급','고급','특급'];
+
+    // 좌측 고정(sticky) 메타 컬럼 너비 정의 (단위: px)
+    // 9개: 일자 / 직책 / 등급 / 업무구분 / 분 / M/D / 월 금액 / 일 금액 / 채택
+    const META_WIDTHS = [120, 80, 70, 100, 70, 70, 130, 130, 180];
+    const META_LEFTS  = META_WIDTHS.reduce((arr, _w, i) => { arr.push(i === 0 ? 0 : arr[i-1] + META_WIDTHS[i-1]); return arr; }, []);
+    const META_LABELS = ['일자','직책','등급','업무구분','분','M/D','월 금액','일 금액','채택'];
+    const SUB_MIN_W = 110; // 월×등급 하위열 최소 너비
+    const ROW_PAD = '14px 10px'; // 행 높이 2.5배 확보용 셀 패딩
+    const stickyTd = (i, extra='') => `position:sticky; left:${META_LEFTS[i]}px; min-width:${META_WIDTHS[i]}px; width:${META_WIDTHS[i]}px; background:#fff; z-index:2; padding:${ROW_PAD}; ${extra}`;
+    const stickyTh = (i, extra='') => `position:sticky; left:${META_LEFTS[i]}px; top:0; min-width:${META_WIDTHS[i]}px; width:${META_WIDTHS[i]}px; background:#eceff1; z-index:20; padding:${ROW_PAD}; ${extra}`;
+    const stickyTf = (extraLeft, extra='') => `position:sticky; left:${extraLeft}px; background:#fff9c4; z-index:15; padding:${ROW_PAD}; ${extra}`;
+
     const monthKey = c => `${c.year}-${c.month}`;
+    const inModal = new Set(monthCols.map(monthKey));
 
-    // ① 등급 × 월 매트릭스 (모달의 내부인력 실적 행과 1:1)
-    const matrixRows = GRADES.map(g => {
-      const cells = monthCols.map(c => {
-        const v = buckets[g][monthKey(c)] || 0;
-        return `<td style="text-align:right; ${v>0?'background:#fff3e0;':'color:#bbb;'}">${fmtMoney(v)}</td>`;
-      }).join('');
-      const rowSum = monthCols.reduce((a,c)=> a + (buckets[g][monthKey(c)]||0), 0);
-      const planMd = GRADE_PLAN_MD[g] || 0;
-      const planAlert = (planMd === 0 && rowSum > 0)
-        ? `<span style="color:#c62828; font-weight:bold;" title="계획 0 / 실적 발생 → 계획 행을 0으로 자동 삽입">⚠</span>`
-        : '';
-      const planCellBg = (planMd === 0 && rowSum > 0) ? 'background:#ffebee;' : '';
-      return `<tr>
-        <td style="font-weight:bold; background:#e3f2fd;">${g}</td>
-        <td style="text-align:right; color:#666;">${fmtMoney(GRADE_PRICE[g])}</td>
-        <td style="text-align:right; ${planCellBg}">${planMd} ${planAlert}</td>
-        ${cells}
-        <td style="text-align:right; background:#ffe0b2;"><strong>${fmtMoney(rowSum)}</strong></td>
-      </tr>`;
-    }).join('');
-    const colSums = monthCols.map(c => GRADES.reduce((a,g)=> a + (buckets[g][monthKey(c)]||0), 0));
-    const grandTotal = colSums.reduce((a,b)=>a+b, 0);
-    const colSumCells = colSums.map(v => `<td style="text-align:right;"><strong>${fmtMoney(v)}</strong></td>`).join('');
+    // 전체 YYYY-MM 추출 (WR 데이터 + 모달 컬럼 합집합)
+    const allYms = Array.from(new Set([
+      ...workReports.map(r => r.date.slice(0,7)),
+      ...monthCols.map(monthKey),
+    ])).sort();
 
-    // ② WR 행별 표 (등급 칼럼 강조)
-    const wrRows = workReports.map(r => {
-      const grade = POSITION_TO_GRADE[r.userPosition] || '-';
-      const md = r.minutes / 480;
-      const price = GRADE_PRICE[grade] || 0;
-      const counted = r.kind === '프로젝트' && grade !== '-' && monthCols.some(c => monthKey(c) === ymKey(r.date));
-      const amount = counted ? md * price : 0;
-      const targetMonth = counted ? ymKey(r.date) : '-';
-      const dim = counted ? '' : 'opacity:0.45; background:#fafafa;';
-      const mark = counted ? '✓' : '✗';
+    // 합계 매트릭스
+    const cellSums = {};      // [ym][grade] = 금액
+    allYms.forEach(ym => { cellSums[ym] = {}; SUB_ORDER.forEach(g => cellSums[ym][g] = 0); });
+
+    // ── 통합표 본문 (WR 한 건 = 한 행, 자기 [월][등급] 셀에만 "일 금액" 표시) ──
+    const bodyRows = workReports.map(r => {
+      const grade        = POSITION_TO_GRADE[r.userPosition] || '-';
+      const md           = r.minutes / 480;
+      const monthlyPrice = GRADE_PRICE[grade] || 0;
+      const dailyPrice   = GRADE_DAILY_PRICE[grade] || 0; // = monthlyPrice / 22
+      const ym           = r.date.slice(0,7);
+      const inRange      = inModal.has(ym);
+      const counted      = r.kind === '프로젝트' && grade !== '-' && inRange;
+      const monthlyAmt   = counted ? md * monthlyPrice : 0; // 월 금액(참고용)
+      const dailyAmt     = counted ? md * dailyPrice   : 0; // 일 금액(실제 분배값)
+      if (counted) cellSums[ym][grade] += dailyAmt;
+
+      const reason = r.kind !== '프로젝트' ? r.kind
+                   : grade === '-'         ? '등급매핑 없음'
+                   : !inRange              ? '범위 밖'
+                   : '';
+      const dim   = counted ? '' : 'opacity:0.45; background:#fafafa;';
+      const mark  = counted ? '✓' : `✗ <small style="color:#c62828;">${reason}</small>`;
+
+      const cells = allYms.flatMap(ym2 =>
+        SUB_ORDER.map(g => {
+          if (counted && ym2 === ym && g === grade) {
+            return `<td style="text-align:right; background:#fff3e0; font-weight:bold; min-width:${SUB_MIN_W}px; padding:${ROW_PAD};">${fmtMoney(dailyAmt)}</td>`;
+          }
+          return `<td style="color:#ddd; text-align:center; min-width:${SUB_MIN_W}px; padding:${ROW_PAD};">·</td>`;
+        })
+      ).join('');
+
+      const rowBg = counted ? '#fff' : '#fafafa';
       return `<tr style="${dim}">
-        <td>${r.date}</td>
-        <td>${r.userPosition}</td>
-        <td style="font-weight:bold; background:${counted?'#e3f2fd':'#f5f5f5'};">${grade}</td>
-        <td>${r.kind}</td>
-        <td style="text-align:right;">${r.minutes}</td>
-        <td style="text-align:right;">${fmtMd(md)}</td>
-        <td style="text-align:right;">${fmtMoney(price)}</td>
-        <td style="text-align:right;">${counted ? fmtMoney(amount) : '-'}</td>
-        <td>${targetMonth} / ${grade}</td>
-        <td style="text-align:center;">${mark}</td>
+        <td style="${stickyTd(0, `background:${rowBg};`)}">${r.date}</td>
+        <td style="${stickyTd(1, `background:${rowBg};`)}">${r.userPosition}</td>
+        <td style="${stickyTd(2, `font-weight:bold; background:${counted?'#e3f2fd':'#f5f5f5'};`)}">${grade}</td>
+        <td style="${stickyTd(3, `background:${rowBg};`)}">${r.kind}</td>
+        <td style="${stickyTd(4, `text-align:right; background:${rowBg};`)}">${r.minutes}</td>
+        <td style="${stickyTd(5, `text-align:right; background:${rowBg};`)}">${fmtMd(md)}</td>
+        <td style="${stickyTd(6, `text-align:right; background:${rowBg}; color:#888;`)}">${counted ? fmtMoney(monthlyAmt) : '-'}</td>
+        <td style="${stickyTd(7, `text-align:right; background:${counted?'#e8f5e9':rowBg}; font-weight:bold;`)}">${counted ? fmtMoney(dailyAmt) : '-'}</td>
+        <td style="${stickyTd(8, `white-space:nowrap; background:${rowBg}; border-right:2px solid #ff9800;`)}">${mark}</td>
+        ${cells}
       </tr>`;
     }).join('');
 
-    // ③ (등급 × 월) 기여 상세
-    const detailBlocks = GRADES.map(g => {
-      const blocks = monthCols.map(c => {
-        const ym = monthKey(c);
-        const items = breakdown[`${g}|${ym}`] || [];
-        if (!items.length) return '';
-        return items.map((r, i) => `
-          <tr>
-            ${i === 0 ? `<td rowspan="${items.length+1}" style="vertical-align:top; font-weight:bold; background:#e3f2fd;">${g}<br>${ym}</td>` : ''}
-            <td>${r.date} · ${r.userPosition}</td>
-            <td style="text-align:right;">${fmtMd(r.md)} M/D</td>
-            <td style="text-align:right;">× ${fmtMoney(r.price)}</td>
-            <td style="text-align:right;">${fmtMoney(r.amount)}</td>
-          </tr>
-        `).join('') + `<tr style="background:#fff3e0; font-weight:bold;">
-          <td style="text-align:right;" colspan="3">${g} · ${ym} 합계 → 모달 [${g}] 행 ${ym} 셀</td>
-          <td style="text-align:right;">${fmtMoney(items.reduce((a,r)=>a+r.amount,0))}</td>
-        </tr>`;
-      }).join('');
-      return blocks;
-    }).join('');
-    const monthDetail = detailBlocks || `<tr><td colspan="5" style="text-align:center; color:#999;">기여 없음</td></tr>`;
+    // ── 합계 행 ──
+    const sumCells = allYms.flatMap(ym =>
+      SUB_ORDER.map(g => {
+        const v = cellSums[ym][g];
+        const bg = inModal.has(ym) ? '#ffe0b2' : '#eeeeee';
+        return `<td style="text-align:right; background:${bg}; font-weight:bold; min-width:${SUB_MIN_W}px; padding:${ROW_PAD};">${v?fmtMoney(v):'-'}</td>`;
+      })
+    ).join('');
+    const grandSum = allYms.reduce((a,ym)=> a + SUB_ORDER.reduce((b,g)=>b+cellSums[ym][g],0), 0);
 
-    // 제외 목록
-    const excludedRows = excluded.length ? excluded.map(r => `
-      <tr style="opacity:0.7;">
-        <td>${r.date}</td><td>${r.userPosition}</td><td>${r.kind}</td>
-        <td style="text-align:right;">${r.minutes}</td>
-        <td style="color:#c62828;">${r.reason}</td>
-      </tr>
-    `).join('') : `<tr><td colspan="5" style="text-align:center; color:#999;">없음</td></tr>`;
+    // ── 헤더 (2행: YYYY-MM (colspan=4) → 초급/중급/고급/특급) ──
+    const META_COLS = META_LABELS.length; // 9: 일자/직책/등급/구분/분/MD/월금액/일금액/채택
+    const META_TOTAL_W = META_WIDTHS.reduce((a,b)=>a+b,0);
+    const ymHeaders = allYms.map(ym =>
+      `<th colspan="4" style="${inModal.has(ym)?'background:#ffe0b2;':'background:#f5f5f5;color:#888;'} top:0; position:sticky; z-index:15; min-width:${SUB_MIN_W*4}px; padding:${ROW_PAD};">${ym}</th>`
+    ).join('');
+    const subHeaders = allYms.map(ym =>
+      SUB_ORDER.map(g =>
+        `<th style="${inModal.has(ym)?'background:#fff3e0;':'background:#fafafa;color:#999;'} position:sticky; top:50px; z-index:15; min-width:${SUB_MIN_W}px; padding:${ROW_PAD};">${g}</th>`
+      ).join('')
+    ).join('');
+    // 좌측 고정된 META 헤더 (rowspan=2) — 각각 stickyTh로 left 오프셋 부여
+    const metaHeadersTop = META_LABELS.map((lbl, i) =>
+      `<th rowspan="2" style="${stickyTh(i, i === META_LABELS.length - 1 ? 'border-right:2px solid #ff9800;' : '')}">${lbl}</th>`
+    ).join('');
+
+    // 제외 목록 (간단히 한 박스로)
+    const excludedSummary = excluded.length
+      ? `<details style="margin-top:8px;"><summary style="cursor:pointer;">▶ 제외된 WR ${excluded.length}건 보기</summary>
+          <table border="1" cellspacing="0" style="border-collapse:collapse; margin-top:6px; font-size:11px;">
+            <thead style="background:#eceff1;"><tr><th>일자</th><th>직책</th><th>구분</th><th>분</th><th>사유</th></tr></thead>
+            <tbody>${excluded.map(r => `<tr><td>${r.date}</td><td>${r.userPosition}</td><td>${r.kind}</td><td style="text-align:right;">${r.minutes}</td><td style="color:#c62828;">${r.reason}</td></tr>`).join('')}</tbody>
+          </table>
+        </details>`
+      : '';
 
     panel.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <h3 style="margin:0; font-size:14px;">내부인력 실적 자동분배 시뮬레이터</h3>
+        <h3 style="margin:0; font-size:16px;">내부인력 실적 자동분배 시뮬레이터 — 통합 매트릭스</h3>
         <button id="perf-close" type="button" style="border:none; background:#eee; border-radius:4px; padding:4px 10px; cursor:pointer;">닫기 ×</button>
       </div>
 
-      <div style="background:#e8f5e9; padding:8px 10px; border-radius:4px; margin-bottom:10px; line-height:1.5;">
-        <strong>분배 규칙</strong><br>
-        ① <code>kind = '프로젝트'</code> 인 Work Report 만 채택 (연차/기타/부서업무 제외)<br>
-        ② 작성자 직책 → 등급(특급/고급/중급/초급) 매핑<br>
-        ③ M/D = 분 ÷ 480 → 금액 = M/D × 등급단가<br>
-        ④ 작성일(<code>seqDt</code>)의 <strong>YYYY-MM</strong> 이 모달의 어느 월 컬럼인지 찾아 누적<br>
-        ⑤ 모달의 [세부구분=내부인력 AND 행구분=실적] 행의 월별 입력칸에 집계 결과 채움
-      </div>
-
-      <div style="background:#fff3e0; padding:8px 10px; border-radius:4px; margin-bottom:10px; line-height:1.5; border-left:3px solid #ff9800;">
-        <strong>⚠ 계획 행 자동 보정 규칙</strong><br>
-        계획에 잡히지 않았던 등급이라도 <strong>실적이 발생하면 계획 행을 0/0/...로 채워 함께 삽입</strong>한다.<br>
-        <small style="color:#666;">
-          사유 ① 사용자가 [계획 vs 실적] 을 같은 등급 라인에서 바로 비교할 수 있어야 함<br>
-          사유 ② 4개 등급(특급/고급/중급/초급) 행은 항상 한 쌍씩 존재해야 매트릭스가 깨지지 않음<br>
-          예시 ③ 본 더미: 특급 계획 = 0 M/D 이지만 이사·상무·전무 WR 이 있어 특급 실적 &gt; 0 → 특급 계획 행도 0 으로 삽입됨
+      <div style="background:#e3f2fd; padding:8px 10px; border-radius:4px; margin-bottom:8px; line-height:1.5; border-left:3px solid #1976d2;">
+        <strong>실적 셀 산식</strong> &nbsp; <code>실적[등급G][월M] = Σ (wr.minutes ÷ 480 × 일단가[G])</code>,
+        &nbsp; <code>일단가[G] = 월단가[G] ÷ 22</code> (근무일수)<br>
+        조건: <code>kind='프로젝트'</code> ∧ 직책→등급=G ∧ <code>date.slice(0,7)</code>=M
+        <small style="color:#555; display:block; margin-top:4px;">
+          · <b>월 단가</b>: 특급 10M / 고급 9M / 중급 7M / 초급 5M &nbsp;→&nbsp;
+          <b>일 단가</b>: 특급 ~454,545 / 고급 ~409,091 / 중급 ~318,182 / 초급 ~227,273 원/일<br>
+          · 주황 배경 = 모달 월 컬럼 (실제 분배 대상) · 회색 배경 = 모달 범위 밖 (제외)<br>
+          · 표의 <b>월 금액</b>은 참고용(회색), 실제 분배값은 <b>일 금액</b>(녹색) 및 월×등급 셀
         </small>
       </div>
 
-      <strong>① 등급 × 월 분배 매트릭스 (모달의 내부인력 실적 4개 행과 1:1)</strong>
-      <table border="1" cellspacing="0" style="width:100%; border-collapse:collapse; margin:6px 0 14px;">
-        <thead style="background:#eceff1;">
-          <tr><th>등급</th><th>단가</th><th>계획<br>(M/D)</th>${monthHeaders}<th>실적 합계<br>(원)</th></tr>
-        </thead>
-        <tbody>${matrixRows}</tbody>
-        <tfoot style="background:#fff9c4; font-weight:bold;">
-          <tr>
-            <td>월 합계</td>
-            <td></td>
-            <td></td>
-            ${colSumCells}
-            <td style="text-align:right; background:#ffe0b2;"><strong>${fmtMoney(grandTotal)}</strong></td>
-          </tr>
-        </tfoot>
-      </table>
+      <div style="background:#fff3e0; padding:6px 10px; border-radius:4px; margin-bottom:10px; line-height:1.4; border-left:3px solid #ff9800; font-size:13px;">
+        <strong>⚠ 계획 행 자동 보정</strong> — 계획에 없던 등급도 실적이 있으면 계획 행을 0/0/...으로 함께 삽입.
+        본 더미: 특급 계획=0이지만 이사·상무·전무 WR로 특급 실적&gt;0 → 특급 계획 행 0으로 삽입됨.
+      </div>
 
-      <strong>② Work Report 더미 행별 처리 결과 (${workReports.length}건)</strong>
-      <table border="1" cellspacing="0" style="width:100%; border-collapse:collapse; margin:6px 0 14px;">
-        <thead style="background:#eceff1;">
-          <tr>
-            <th>일자</th><th>직책</th><th>등급</th><th>업무구분</th>
-            <th>분</th><th>M/D</th><th>단가</th><th>금액</th><th>적용 월/등급</th><th>채택</th>
-          </tr>
-        </thead>
-        <tbody>${wrRows}</tbody>
-      </table>
+      <div style="overflow:auto; max-height: calc(100vh - 240px); border:1px solid #ddd;">
+        <table border="1" cellspacing="0" style="border-collapse:separate; border-spacing:0; white-space:nowrap; font-size:14px;">
+          <thead style="background:#eceff1;">
+            <tr>
+              ${metaHeadersTop}
+              ${ymHeaders}
+            </tr>
+            <tr>${subHeaders}</tr>
+          </thead>
+          <tbody>${bodyRows}</tbody>
+          <tfoot style="background:#fff9c4; font-weight:bold;">
+            <tr>
+              <td colspan="${META_COLS}" style="${stickyTf(0, `text-align:right; min-width:${META_TOTAL_W}px; border-right:2px solid #ff9800;`)}">합계 (주황 셀 = 모달 실적 행에 꽂힘)</td>
+              ${sumCells}
+            </tr>
+            <tr>
+              <td colspan="${META_COLS}" style="${stickyTf(0, `text-align:right; min-width:${META_TOTAL_W}px; border-right:2px solid #ff9800;`)}">총합 (모달 분배 대상만)</td>
+              <td colspan="${allYms.length * 4}" style="text-align:right; background:#ffe0b2;">${fmtMoney(grandSum)}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
-      <strong>③ 등급 × 월 기여 상세 (어떤 WR이 어느 셀에 꽂혔는지)</strong>
-      <table border="1" cellspacing="0" style="width:100%; border-collapse:collapse; margin:6px 0 14px;">
-        <thead style="background:#eceff1;">
-          <tr><th>등급/월</th><th>WR 행</th><th>M/D</th><th>단가</th><th>금액</th></tr>
-        </thead>
-        <tbody>${monthDetail}</tbody>
-      </table>
-
-      <strong>④ 제외된 Work Report (${excluded.length}건)</strong>
-      <table border="1" cellspacing="0" style="width:100%; border-collapse:collapse; margin:6px 0;">
-        <thead style="background:#eceff1;">
-          <tr><th>일자</th><th>직책</th><th>업무구분</th><th>분</th><th>제외 사유</th></tr>
-        </thead>
-        <tbody>${excludedRows}</tbody>
-      </table>
+      ${excludedSummary}
     `;
     document.getElementById('perf-close').addEventListener('click', () => {
       panel.style.display = 'none';

@@ -461,9 +461,20 @@ const checklistCol = db.collection('qa_checklists');
 
 // ── State ──────────────────────────────────────────────────
 let currentUser = '';
-let isAdmin = false;
+let isAdmin = false;       // 관리자(hphong) → 관리자 대시보드 진입
+let isFullAccess = false;  // 풀 접근 권한 (hphong, 홍휘표) — 비공개 섹션 포함
 let results = {};   // { itemId: { status:'pass'|'fail'|null, reason:'', remark:'' } }
 let lastSaved = null;
+
+// ── 비공개 섹션 정책 ───────────────────────────────────────
+// "투입인력관리 모달" (pj-hrm) 부터는 수정 예정이라 일반 사용자에게는 감춤.
+// hphong / 홍휘표 만 전체 섹션을 본다.
+const HIDDEN_FROM_SECTION_ID = 'pj-hrm';
+function getVisibleSections() {
+  if (isFullAccess) return SECTIONS;
+  const idx = SECTIONS.findIndex(s => s.id === HIDDEN_FROM_SECTION_ID);
+  return idx === -1 ? SECTIONS : SECTIONS.slice(0, idx);
+}
 
 // ── Test Data ─────────────────────────────────────────────
 const SECTIONS = [
@@ -644,9 +655,11 @@ function login() {
   if (!val) return;
   currentUser = val;
   isAdmin = (val === 'hphong');
+  isFullAccess = (val === 'hphong' || val === '홍휘표');
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'block';
-  document.getElementById('userBadge').textContent = currentUser + (isAdmin ? ' (관리자)' : '');
+  document.getElementById('userBadge').textContent = currentUser
+    + (isAdmin ? ' (관리자)' : (isFullAccess ? ' (풀 접근)' : ''));
   if (isAdmin) {
     renderAdmin();
   } else {
@@ -856,7 +869,7 @@ function renderChecklist(readonly) {
 
   let html = '';
 
-  SECTIONS.forEach(sec => {
+  getVisibleSections().forEach(sec => {
     html += `<div class="section-block">
       <div class="section-title">${sec.title}</div>`;
     sec.items.forEach((item, idx) => {
@@ -921,22 +934,36 @@ function autoSave() {
 // ── Interactions ───────────────────────────────────────────
 function setStatus(itemId, status) {
   if (!results[itemId]) results[itemId] = { status: null, reason: '', remark: '' };
-  results[itemId].status = status;
+  // 같은 상태를 다시 누르면 미응답으로 토글 해제
+  const next = (results[itemId].status === status) ? null : status;
+  results[itemId].status = next;
 
   // badge 갱신
   const itemEl = document.getElementById('item-' + itemId);
   const badge = itemEl.querySelector('.badge');
-  badge.className = status === 'pass' ? 'badge badge-pass' : 'badge badge-fail';
-  badge.textContent = status === 'pass' ? 'PASS' : 'FAIL';
+  if (next === 'pass') {
+    badge.className = 'badge badge-pass';
+    badge.textContent = 'PASS';
+  } else if (next === 'fail') {
+    badge.className = 'badge badge-fail';
+    badge.textContent = 'FAIL';
+  } else {
+    badge.className = 'badge badge-pending';
+    badge.textContent = '미완료';
+  }
 
   // button active
-  itemEl.querySelector('.pass-btn').classList.toggle('active', status === 'pass');
-  itemEl.querySelector('.fail-btn').classList.toggle('active', status === 'fail');
+  itemEl.querySelector('.pass-btn').classList.toggle('active', next === 'pass');
+  itemEl.querySelector('.fail-btn').classList.toggle('active', next === 'fail');
 
-  // fail reason
+  // fail reason 영역: fail 일 때만 노출, 그 외는 숨기고 사유 비움
   const failEl = document.getElementById('fail-' + itemId);
-  failEl.style.display = status === 'fail' ? 'block' : 'none';
-  if (status === 'pass') results[itemId].reason = '';
+  failEl.style.display = next === 'fail' ? 'block' : 'none';
+  if (next !== 'fail') {
+    results[itemId].reason = '';
+    const reasonInput = failEl.querySelector('input');
+    if (reasonInput) reasonInput.value = '';
+  }
 
   updateProgress();
   saveAll(true); // 체크 즉시 저장
@@ -961,7 +988,8 @@ function setSectionRemark(secId, val) {
 
 function updateProgress() {
   let total = 0, done = 0;
-  SECTIONS.forEach(s => s.items.forEach(item => {
+  // 비공개 섹션은 일반 사용자의 진행률 분모에서도 제외
+  getVisibleSections().forEach(s => s.items.forEach(item => {
     total++;
     if (results[item.id]?.status) done++;
   }));
