@@ -717,6 +717,16 @@ document.getElementById('shareLinkBtn').addEventListener('click', async () => {
 });
 
 // ── Admin ──────────────────────────────────────────────────
+// HTML 속성값 안전 이스케이프 — data-* 속성에 자유 텍스트 담을 때 사용
+function attrEsc(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 async function renderAdmin() {
   const mc = document.getElementById('mainContent');
   mc.innerHTML = '<div class="loading">사용자 목록 불러오는 중...</div>';
@@ -785,40 +795,58 @@ async function renderAdmin() {
           const res = users[uname].results || {};
           const st = res[item.id]?.status;
           const entry = res[item.id] || {};
-          const reason = (entry.reason || '').replace(/'/g, '&#39;');
-          const remark = (entry.remark || '').replace(/'/g, '&#39;');
-          const hasComment = reason || remark;
+          const reasonRaw = entry.reason || '';
+          const remarkRaw = entry.remark || '';
+          const hasComment = reasonRaw || remarkRaw;
           const badge = st === 'pass'
             ? '<span class="cell-pass">PASS</span>'
             : st === 'fail'
               ? '<span class="cell-fail">FAIL</span>'
               : '<span class="cell-none">-</span>';
           const btn = hasComment
-            ? `<br><button class="cell-comment-btn" onclick="openCommentModal('${item.tc}','${uname}','${reason}','${remark}')">💬 메모</button>`
+            ? `<br><button class="cell-comment-btn" data-title="${attrEsc(item.tc)}" data-uname="${attrEsc(uname)}" data-reason="${attrEsc(reasonRaw)}" data-remark="${attrEsc(remarkRaw)}">💬 메모</button>`
             : '';
           html += `<td class="user-cell">${badge}${btn}</td>`;
         });
         html += '</tr>';
       });
 
-      // 섹션 그밖의 비고사항 행
+      // 섹션 그밖의 비고사항 행 (항상 노출하여 관리자가 누락 없이 확인 가능하도록)
       const secRemarkKey = '__remark__' + sec.id;
       const hasAnySecRemark = userNames.some(u => (users[u].results || {})[secRemarkKey]);
-      if (hasAnySecRemark) {
-        html += `<tr><td class="tc-id" style="color:#aaa">비고</td><td style="font-size:11px;color:#aaa">그밖의 비고사항</td>`;
-        userNames.forEach(uname => {
-          const sr = ((users[uname].results || {})[secRemarkKey] || '').replace(/'/g, '&#39;');
-          const btn = sr
-            ? `<button class="cell-comment-btn" onclick="openCommentModal('그밖의 비고사항','${uname}','','${sr}')">💬 보기</button>`
-            : '<span class="cell-none">-</span>';
-          html += `<td class="user-cell">${btn}</td>`;
-        });
-        html += '</tr>';
-      }
+      html += `<tr class="section-remark-row">
+        <td class="tc-id" style="color:#888; background:#fafafa;">비고</td>
+        <td style="font-size:11px; color:#888; background:#fafafa;">그밖의 비고사항${hasAnySecRemark ? '' : ' <span style="color:#bbb;">(작성 없음)</span>'}</td>`;
+      userNames.forEach(uname => {
+        const srRaw = ((users[uname].results || {})[secRemarkKey] || '');
+        if (srRaw) {
+          const preview = srRaw.length > 40 ? srRaw.slice(0, 40) + '…' : srRaw;
+          const titleRaw = `그밖의 비고사항 — ${sec.title}`;
+          html += `<td class="user-cell" style="text-align:left; font-size:11px; background:#fafafa;">
+            <div style="white-space:normal; line-height:1.35; color:#333;">${attrEsc(preview)}</div>
+            <button class="cell-comment-btn" data-title="${attrEsc(titleRaw)}" data-uname="${attrEsc(uname)}" data-reason="" data-remark="${attrEsc(srRaw)}" style="margin-top:4px;">💬 전체 보기</button>
+          </td>`;
+        } else {
+          html += `<td class="user-cell" style="background:#fafafa;"><span class="cell-none">-</span></td>`;
+        }
+      });
+      html += '</tr>';
     });
 
     html += '</tbody></table></div>';
     mc.innerHTML = html;
+
+    // 인라인 onclick 대신 이벤트 위임 — 본문에 따옴표·줄바꿈·<>가 있어도 안전
+    mc.querySelectorAll('.cell-comment-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        openCommentModal(
+          btn.dataset.title || '',
+          btn.dataset.uname || '',
+          btn.dataset.reason || '',
+          btn.dataset.remark || ''
+        );
+      });
+    });
   } catch(e) {
     mc.innerHTML = '<div class="loading">불러오기 실패: ' + e.message + '</div>';
   }
